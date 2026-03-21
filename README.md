@@ -16,5 +16,5 @@ Block custom chat messages
 ## Features
 
 ### Chat
-- Hide custom chat messages
 - Block sending custom chat messages
+- Block receiving custom chat messages
