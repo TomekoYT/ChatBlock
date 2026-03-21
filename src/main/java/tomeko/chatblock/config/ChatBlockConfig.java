@@ -10,6 +10,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import tomeko.chatblock.utils.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChatBlockConfig {
     public static final ConfigClassHandler<ChatBlockConfig> CONFIG = ConfigClassHandler.createBuilder(ChatBlockConfig.class)
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
@@ -17,9 +20,24 @@ public class ChatBlockConfig {
                     .build())
             .build();
 
+    @SerialEntry
+    public static List<String> customChatMessagesToHide = new ArrayList<>();
+
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
                 .title(Text.literal(Constants.MOD_NAME))
+
+                .category(ConfigCategory.createBuilder()
+                        .name(Text.literal("Chat Block Config"))
+
+                        .group(ListOption.<String>createBuilder()
+                                .name(Text.literal("Hide Custom Chat Messages"))
+                                .binding(defaults.customChatMessagesToHide, () -> config.customChatMessagesToHide, newVal -> config.customChatMessagesToHide = newVal)
+                                .controller(StringControllerBuilder::create)
+                                .initial("")
+                                .build())
+                        .build())
+
         )).generateScreen(parent);
     }
 
