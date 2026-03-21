@@ -21,7 +21,16 @@ public class ChatBlockConfig {
             .build();
 
     @SerialEntry
-    public static List<String> customChatMessagesToHide = new ArrayList<>();
+    public static boolean blockCaseSensitive = false;
+    @SerialEntry
+    public static List<String> messagesToBlock = new ArrayList<>();
+
+    @SerialEntry
+    public static boolean hideCaseSensitive = false;
+    @SerialEntry
+    public static boolean hideIgnoreFormatting = true;
+    @SerialEntry
+    public static List<String> messagesToHide = new ArrayList<>();
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
@@ -30,9 +39,37 @@ public class ChatBlockConfig {
                 .category(ConfigCategory.createBuilder()
                         .name(Text.literal("Chat Block Config"))
 
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.literal("Block Sending Custom Chat Messages"))
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.literal("Case-Sensitive"))
+                                        .binding(defaults.blockCaseSensitive, () -> config.blockCaseSensitive, newVal -> config.blockCaseSensitive = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .build())
                         .group(ListOption.<String>createBuilder()
-                                .name(Text.literal("Hide Custom Chat Messages"))
-                                .binding(defaults.customChatMessagesToHide, () -> config.customChatMessagesToHide, newVal -> config.customChatMessagesToHide = newVal)
+                                .name(Text.literal("Block sending following chat messages:"))
+                                .binding(defaults.messagesToBlock, () -> config.messagesToBlock, newVal -> config.messagesToBlock = newVal)
+                                .controller(StringControllerBuilder::create)
+                                .initial("")
+                                .build())
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.literal("Block Receiving Custom Chat Messages"))
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.literal("Case-Sensitive"))
+                                        .binding(defaults.hideCaseSensitive, () -> config.hideCaseSensitive, newVal -> config.hideCaseSensitive = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.literal("Ignore Formatting"))
+                                        .binding(defaults.hideIgnoreFormatting, () -> config.hideIgnoreFormatting, newVal -> config.hideIgnoreFormatting = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .build())
+                        .group(ListOption.<String>createBuilder()
+                                .name(Text.literal("Block receiving following chat messages:"))
+                                .binding(defaults.messagesToHide, () -> config.messagesToHide, newVal -> config.messagesToHide = newVal)
                                 .controller(StringControllerBuilder::create)
                                 .initial("")
                                 .build())
