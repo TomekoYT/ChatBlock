@@ -5,6 +5,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import tomeko.chatblock.config.ChatBlockConfig;
+import tomeko.chatblock.config.Macro;
 
 public class Chat {
     public static void register() {
@@ -23,7 +24,8 @@ public class Chat {
             message = removeFormatting(message);
         }
 
-        for (String messageToHide : ChatBlockConfig.messagesToHide) {
+        for (Macro macro : ChatBlockConfig.messagesToHide) {
+            String messageToHide = macro.getText();
             if (messageToHide.isEmpty()) continue;
 
             if (

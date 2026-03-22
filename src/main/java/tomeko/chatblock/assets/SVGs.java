@@ -1,0 +1,9 @@
+package tomeko.chatblock.assets;
+
+import cc.polyfrost.oneconfig.renderer.asset.SVG;
+
+public interface SVGs {
+    SVG KEYSTROKE = null;
+    SVG CHECKBOX_TICK = null;
+    SVG TEXT_INPUT = null;
+}
