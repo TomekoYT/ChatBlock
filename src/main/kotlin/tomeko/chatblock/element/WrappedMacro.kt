@@ -8,7 +8,8 @@ import tomeko.chatblock.config.Macro
 
 @Suppress("UnstableAPIUsage")
 class WrappedMacro(
-    val macro: Macro
+    val macro: Macro,
+    private val parentOption: MacroListOption
 ) {
     private val removeButton = BasicButton(32, 32, ChatBlock.MINUS_ICON, BasicButton.ALIGNMENT_CENTER, ColorPalette.PRIMARY_DESTRUCTIVE)
     private val checkbox = MacroCheckbox(macro)
@@ -18,7 +19,7 @@ class WrappedMacro(
 
     init {
         removeButton.setClickAction {
-            MacroListOption.willBeRemoved = this
+            parentOption.willBeRemoved = this
         }
     }
 

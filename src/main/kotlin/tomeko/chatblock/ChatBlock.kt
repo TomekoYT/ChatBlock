@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import tomeko.chatblock.chat.Chat
 import tomeko.chatblock.config.ChatBlockConfig
-import tomeko.chatblock.element.MacroListOption
 import tomeko.chatblock.element.WrappedMacro
 
 @Mod(modid = ChatBlock.MODID, name = ChatBlock.NAME, version = ChatBlock.VERSION, modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter")
@@ -31,7 +30,11 @@ object ChatBlock {
 
     @Subscribe
     fun onKeyInput(event: KeyInputEvent) {
-        for (wrapped in MacroListOption.wrappedMacros) {
+        for (wrapped in ChatBlockConfig.blockOption.wrappedMacros) {
+            wrapped.onKeyInput()
+        }
+
+        for (wrapped in ChatBlockConfig.hideOption.wrappedMacros) {
             wrapped.onKeyInput()
         }
     }

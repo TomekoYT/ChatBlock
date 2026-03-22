@@ -9,14 +9,16 @@ import tomeko.chatblock.ChatBlock
 import tomeko.chatblock.config.Macro
 
 @Suppress("UnstableAPIUsage")
-object MacroListOption : BasicOption(null, null, "", "", "General", "", 2), IFocusable {
+class MacroListOption (
+    initialMacros: MutableList<WrappedMacro> = mutableListOf()
+): BasicOption(null, null, "", "", "General", "", 2), IFocusable {
     private val addButton = BasicButton(32, 32, ChatBlock.PLUS_ICON, BasicButton.ALIGNMENT_CENTER, ColorPalette.PRIMARY)
-    var wrappedMacros: MutableList<WrappedMacro> = ArrayList()
+    var wrappedMacros: MutableList<WrappedMacro> = initialMacros
     var willBeRemoved: WrappedMacro? = null
 
     init {
         addButton.setClickAction {
-            wrappedMacros.add(WrappedMacro(Macro()))
+            wrappedMacros.add(WrappedMacro(Macro(), this))
         }
     }
 
