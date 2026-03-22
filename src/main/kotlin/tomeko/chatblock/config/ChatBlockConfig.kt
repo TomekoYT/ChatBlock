@@ -52,9 +52,6 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
     @CustomOption
     var messagesToHide: Array<Macro> = emptyArray()
 
-    var blockOption: MacroListOption = MacroListOption()
-    var hideOption: MacroListOption = MacroListOption()
-
     override fun getCustomOption(
         field: Field,
         annotation: CustomOption,
@@ -62,34 +59,31 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
         mod: Mod,
         migrate: Boolean
     ): BasicOption {
-
-        val option = when (field.name) {
-            "messagesToBlock" -> blockOption
-            "messagesToHide" -> hideOption
-            else -> MacroListOption()
-        }
-
-        option.wrappedMacros = when (field.name) {
-            "messagesToBlock" -> messagesToBlock.mapTo(mutableListOf()) { WrappedMacro(it, option) }
-            "messagesToHide" -> messagesToHide.mapTo(mutableListOf()) { WrappedMacro(it, option) }
-            else -> mutableListOf()
-        }
-
+        val option = MacroListOption
         ConfigUtils.getSubCategory(page, "General", "").options.add(option)
-
         return option
     }
 
     override fun load() {
         super.load()
 
-        blockOption.wrappedMacros = messagesToBlock.mapTo(mutableListOf()) { WrappedMacro(it, blockOption) }
-        hideOption.wrappedMacros = messagesToHide.mapTo(mutableListOf()) { WrappedMacro(it, hideOption) }
+        MacroListOption.wrappedMacros = messagesToBlock.mapTo(mutableListOf()) { macro ->
+            WrappedMacro(macro)
+        }
+
+        MacroListOption.wrappedMacros = messagesToHide.mapTo(mutableListOf()) { macro ->
+            WrappedMacro(macro)
+        }
     }
 
     override fun save() {
-        messagesToBlock = blockOption.wrappedMacros.map { it.macro }.toTypedArray()
-        messagesToHide = hideOption.wrappedMacros.map { it.macro }.toTypedArray()
+        messagesToBlock = MacroListOption.wrappedMacros.map { wrapped ->
+            wrapped.macro
+        }.toTypedArray()
+
+        messagesToHide = MacroListOption.wrappedMacros.map { wrapped ->
+            wrapped.macro
+        }.toTypedArray()
 
         super.save()
     }
