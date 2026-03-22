@@ -59,7 +59,10 @@ val modShade: Configuration by configurations.creating {
 }
 
 sourceSets {
+	val dummy by creating
 	main {
+		dummy.compileClasspath += compileClasspath
+		compileClasspath += dummy.output
 		output.setResourcesDir(java.classesDirectory)
 	}
 }
@@ -70,6 +73,7 @@ repositories {
 
 dependencies {
 	modCompileOnly("cc.polyfrost:oneconfig-$platform:0.2.2-alpha+")
+	"dummyCompileOnly"("cc.polyfrost:oneconfig-$platform:0.2.0-alpha+")
 
 	modRuntimeOnly("me.djtheredstoner:DevAuth-${if (platform.isFabric) "fabric" else if (platform.isLegacyForge) "forge-legacy" else "forge-latest"}:1.2.0")
 

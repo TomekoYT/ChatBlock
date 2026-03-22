@@ -4,14 +4,14 @@ import cc.polyfrost.oneconfig.gui.animations.Animation
 import cc.polyfrost.oneconfig.gui.animations.ColorAnimation
 import cc.polyfrost.oneconfig.gui.animations.DummyAnimation
 import cc.polyfrost.oneconfig.gui.animations.EaseInOutQuad
+import cc.polyfrost.oneconfig.internal.assets.Colors
+import cc.polyfrost.oneconfig.internal.assets.SVGs
 import cc.polyfrost.oneconfig.utils.InputHandler
 import cc.polyfrost.oneconfig.utils.color.ColorPalette
 import cc.polyfrost.oneconfig.utils.dsl.VG
 import cc.polyfrost.oneconfig.utils.dsl.drawHollowRoundedRect
 import cc.polyfrost.oneconfig.utils.dsl.drawRoundedRect
 import cc.polyfrost.oneconfig.utils.dsl.drawSVG
-import tomeko.chatblock.assets.Colors
-import tomeko.chatblock.assets.SVGs
 import tomeko.chatblock.config.Macro
 
 class MacroCheckbox(

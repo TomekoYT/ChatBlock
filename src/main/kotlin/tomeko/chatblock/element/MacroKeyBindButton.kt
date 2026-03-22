@@ -3,10 +3,10 @@ package tomeko.chatblock.element
 import cc.polyfrost.oneconfig.config.core.OneKeyBind
 import cc.polyfrost.oneconfig.gui.OneConfigGui
 import cc.polyfrost.oneconfig.gui.elements.BasicButton
+import cc.polyfrost.oneconfig.internal.assets.SVGs
 import cc.polyfrost.oneconfig.libs.universal.UKeyboard
 import cc.polyfrost.oneconfig.utils.InputHandler
 import cc.polyfrost.oneconfig.utils.color.ColorPalette
-import tomeko.chatblock.assets.SVGs
 
 @Suppress("UnstableAPIUsage")
 class MacroKeyBindButton(

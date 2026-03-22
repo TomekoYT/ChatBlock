@@ -1,4 +1,4 @@
-package tomeko.chatblock.assets;
+package cc.polyfrost.oneconfig.internal.assets;
 
 public interface Colors {
     int GRAY_300 = 0xFF494F5C;

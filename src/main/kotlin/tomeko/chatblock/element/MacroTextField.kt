@@ -1,8 +1,8 @@
 package tomeko.chatblock.element
 
 import cc.polyfrost.oneconfig.gui.elements.text.TextInputField
+import cc.polyfrost.oneconfig.internal.assets.SVGs
 import cc.polyfrost.oneconfig.utils.InputHandler
-import tomeko.chatblock.assets.SVGs
 import tomeko.chatblock.config.Macro
 
 @Suppress("UnstableAPIUsage")
