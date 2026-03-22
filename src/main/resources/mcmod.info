@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "${id}",
+    "name": "${name}",
+    "description": "Block custom chat messages",
+    "version": "${version}",
+    "mcversion": "${mcVersionStr}",
+    "url": "https://modrinth.com/mod/chatblock",
+    "updateUrl": "https://modrinth.com/mod/chatblock",
+    "authorList": [
+      "Tomeko"
+    ],
+    "credits": "",
+    "logoFile": "icon.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
