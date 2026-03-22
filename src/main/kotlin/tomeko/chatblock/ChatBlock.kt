@@ -1,16 +1,11 @@
 package tomeko.chatblock
 
 import cc.polyfrost.oneconfig.events.EventManager
-import cc.polyfrost.oneconfig.events.event.KeyInputEvent
-import cc.polyfrost.oneconfig.libs.eventbus.Subscribe
 import cc.polyfrost.oneconfig.renderer.asset.SVG
-import cc.polyfrost.oneconfig.utils.dsl.mc
-import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import tomeko.chatblock.chat.Chat
 import tomeko.chatblock.config.ChatBlockConfig
-import tomeko.chatblock.element.WrappedMacro
 
 @Mod(modid = ChatBlock.MODID, name = ChatBlock.NAME, version = ChatBlock.VERSION, modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter")
 object ChatBlock {
@@ -26,26 +21,5 @@ object ChatBlock {
         ChatBlockConfig.initialize()
         EventManager.INSTANCE.register(this)
         Chat.register()
-    }
-
-    @Subscribe
-    fun onKeyInput(event: KeyInputEvent) {
-        for (wrapped in ChatBlockConfig.blockOption.wrappedMacros) {
-            wrapped.onKeyInput()
-        }
-
-        for (wrapped in ChatBlockConfig.hideOption.wrappedMacros) {
-            wrapped.onKeyInput()
-        }
-    }
-
-    private fun WrappedMacro.onKeyInput() {
-        if (!macro.enabled) return
-        if (!firstPressed()) return
-        with(macro.text) {
-            if (ClientCommandHandler.instance.executeCommand(mc.thePlayer, this) == 0) {
-                mc.thePlayer.sendChatMessage(this)
-            }
-        }
     }
 }

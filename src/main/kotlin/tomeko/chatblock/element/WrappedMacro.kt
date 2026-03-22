@@ -14,8 +14,6 @@ class WrappedMacro(
     private val removeButton = BasicButton(32, 32, ChatBlock.MINUS_ICON, BasicButton.ALIGNMENT_CENTER, ColorPalette.PRIMARY_DESTRUCTIVE)
     private val checkbox = MacroCheckbox(macro)
     private val textField = MacroTextField(macro)
-    private val keyBindButton = MacroKeyBindButton(macro.keyBind)
-    private var lastPressed = false
 
     init {
         removeButton.setClickAction {
@@ -27,17 +25,9 @@ class WrappedMacro(
         removeButton.draw(vg, x, y, inputHandler)
         checkbox.draw(vg, x + 58, y, inputHandler)
         textField.draw(vg, x + 96, y, inputHandler)
-        keyBindButton.draw(vg, x + 736, y, inputHandler)
     }
 
-    fun keyTyped(key: Char, keyCode: Int) = textField.isKeyTyped(key, keyCode) || keyBindButton.isKeyTyped(keyCode)
+    fun keyTyped(key: Char, keyCode: Int) = textField.isKeyTyped(key, keyCode)
 
-    fun hasFocus() = textField.isToggled || keyBindButton.isToggled
-
-    fun firstPressed(): Boolean {
-        val nowPressed = macro.keyBind.isActive
-        if (lastPressed == nowPressed) return false
-        lastPressed = nowPressed
-        return nowPressed
-    }
+    fun hasFocus() = textField.isToggled
 }
