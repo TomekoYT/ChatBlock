@@ -25,6 +25,8 @@ public class Chat {
         }
 
         for (Macro macro : ChatBlockConfig.messagesToHide) {
+            if (!macro.getEnabled()) continue;
+
             String messageToHide = macro.getText();
             if (messageToHide.isEmpty()) continue;
 

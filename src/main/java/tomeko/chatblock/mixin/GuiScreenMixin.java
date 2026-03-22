@@ -13,6 +13,8 @@ public class GuiScreenMixin {
     @Inject(method = "sendChatMessage(Ljava/lang/String;Z)V", at = @At("HEAD"), cancellable = true)
     private void blockChatMessage(String message, boolean addToChat, CallbackInfo ci) {
         for (Macro macro : ChatBlockConfig.messagesToBlock) {
+            if (!macro.getEnabled()) continue;
+
             String messageToBlock = macro.getText();
             if (messageToBlock.isEmpty()) continue;
 
