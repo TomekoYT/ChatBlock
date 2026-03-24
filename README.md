@@ -11,7 +11,7 @@
 </a>
 
 # Chat Block
-Block custom chat messages
+Block sending/receiving custom chat messages
 
 ## Features
 
