@@ -12,15 +12,15 @@ import tomeko.chatblock.config.Macro;
 public class GuiScreenMixin {
     @Inject(method = "sendChatMessage(Ljava/lang/String;Z)V", at = @At("HEAD"), cancellable = true)
     private void blockChatMessage(String message, boolean addToChat, CallbackInfo ci) {
-        for (Macro macro : ChatBlockConfig.messagesToBlock) {
+        for (Macro macro : ChatBlockConfig.messagesToBlockSending) {
             if (!macro.getEnabled()) continue;
 
             String messageToBlock = macro.getText();
             if (messageToBlock.isEmpty()) continue;
 
             if (
-                    (ChatBlockConfig.blockCaseSensitive && message.contains(messageToBlock))
-                            || (!ChatBlockConfig.blockCaseSensitive && message.toLowerCase().contains(messageToBlock.toLowerCase()))
+                    (ChatBlockConfig.blockSendingCaseSensitive && message.contains(messageToBlock))
+                            || (!ChatBlockConfig.blockSendingCaseSensitive && message.toLowerCase().contains(messageToBlock.toLowerCase()))
             ) {
                 ci.cancel();
                 return;

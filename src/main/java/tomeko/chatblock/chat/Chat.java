@@ -20,19 +20,19 @@ public class Chat {
 
         String message = event.message.getUnformattedText();
 
-        if (ChatBlockConfig.hideIgnoreFormatting) {
+        if (ChatBlockConfig.blockReceivingIgnoreFormatting) {
             message = removeFormatting(message);
         }
 
-        for (Macro macro : ChatBlockConfig.messagesToHide) {
+        for (Macro macro : ChatBlockConfig.messagesToBlockReceiving) {
             if (!macro.getEnabled()) continue;
 
             String messageToHide = macro.getText();
             if (messageToHide.isEmpty()) continue;
 
             if (
-                    (ChatBlockConfig.hideCaseSensitive && message.contains(messageToHide))
-                            || (!ChatBlockConfig.hideCaseSensitive && message.toLowerCase().contains(messageToHide.toLowerCase()))
+                    (ChatBlockConfig.blockReceivingCaseSensitive && message.contains(messageToHide))
+                            || (!ChatBlockConfig.blockReceivingCaseSensitive && message.toLowerCase().contains(messageToHide.toLowerCase()))
             ) {
                 event.setCanceled(true);
                 return;
