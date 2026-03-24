@@ -2,7 +2,7 @@
   {
     "modid": "${id}",
     "name": "${name}",
-    "description": "Block custom chat messages",
+    "description": "Block sending/receiving custom chat messages",
     "version": "${version}",
     "mcversion": "${mcVersionStr}",
     "url": "https://modrinth.com/mod/chatblock",
