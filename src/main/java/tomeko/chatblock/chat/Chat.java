@@ -7,39 +7,39 @@ import tomeko.chatblock.config.ChatBlockConfig;
 
 public class Chat {
     public static void register() {
-        ClientSendMessageEvents.ALLOW_CHAT.register(Chat::BlockCustomMessages);
-        ClientSendMessageEvents.ALLOW_COMMAND.register(Chat::BlockCustomMessages);
-        ClientReceiveMessageEvents.ALLOW_GAME.register(Chat::HideCustomMessages);
+        ClientSendMessageEvents.ALLOW_CHAT.register(Chat::BlockSendingCustomMessages);
+        ClientSendMessageEvents.ALLOW_COMMAND.register(Chat::BlockSendingCustomMessages);
+        ClientReceiveMessageEvents.ALLOW_GAME.register(Chat::BlockReceivingCustomMessages);
     }
 
-    private static boolean BlockCustomMessages(String message) {
-        for (String messageToBlock : ChatBlockConfig.messagesToBlock) {
+    private static boolean BlockSendingCustomMessages(String message) {
+        for (String messageToBlock : ChatBlockConfig.messagesToBlockSending) {
             if (messageToBlock.isEmpty()) continue;
 
             if (
-                    (ChatBlockConfig.blockCaseSensitive && message.contains(messageToBlock))
-                    || (!ChatBlockConfig.blockCaseSensitive && message.toLowerCase().contains(messageToBlock.toLowerCase()))
+                    (ChatBlockConfig.blockSendingCaseSensitive && message.contains(messageToBlock))
+                    || (!ChatBlockConfig.blockSendingCaseSensitive && message.toLowerCase().contains(messageToBlock.toLowerCase()))
             ) return false;
         }
 
         return true;
     }
 
-    private static boolean HideCustomMessages(Text messageText, boolean fromActionBar) {
+    private static boolean BlockReceivingCustomMessages(Text messageText, boolean fromActionBar) {
         if (fromActionBar || messageText == null) {
             return true;
         }
 
         String message = messageText.getString();
 
-        if (ChatBlockConfig.hideIgnoreFormatting) message = removeFormatting(message);
+        if (ChatBlockConfig.blockReceivingIgnoreFormatting) message = removeFormatting(message);
 
-        for (String messageToHide : ChatBlockConfig.messagesToHide) {
+        for (String messageToHide : ChatBlockConfig.messagesToBlockReceiving) {
             if (messageToHide.isEmpty()) continue;
 
             if (
-                    (ChatBlockConfig.hideCaseSensitive && message.contains(messageToHide))
-                            || (!ChatBlockConfig.hideCaseSensitive && message.toLowerCase().contains(messageToHide.toLowerCase()))
+                    (ChatBlockConfig.blockReceivingCaseSensitive && message.contains(messageToHide))
+                            || (!ChatBlockConfig.blockReceivingCaseSensitive && message.toLowerCase().contains(messageToHide.toLowerCase()))
             ) return false;
         }
 

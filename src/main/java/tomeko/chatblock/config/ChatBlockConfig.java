@@ -21,16 +21,16 @@ public class ChatBlockConfig {
             .build();
 
     @SerialEntry
-    public static boolean blockCaseSensitive = false;
+    public static boolean blockSendingCaseSensitive = false;
     @SerialEntry
-    public static List<String> messagesToBlock = new ArrayList<>();
+    public static List<String> messagesToBlockSending = new ArrayList<>();
 
     @SerialEntry
-    public static boolean hideCaseSensitive = false;
+    public static boolean blockReceivingCaseSensitive = false;
     @SerialEntry
-    public static boolean hideIgnoreFormatting = true;
+    public static boolean blockReceivingIgnoreFormatting = true;
     @SerialEntry
-    public static List<String> messagesToHide = new ArrayList<>();
+    public static List<String> messagesToBlockReceiving = new ArrayList<>();
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
@@ -43,13 +43,13 @@ public class ChatBlockConfig {
                                 .name(Text.literal("Block Sending Custom Chat Messages"))
                                 .option(Option.<Boolean>createBuilder()
                                         .name(Text.literal("Case-Sensitive"))
-                                        .binding(defaults.blockCaseSensitive, () -> config.blockCaseSensitive, newVal -> config.blockCaseSensitive = newVal)
+                                        .binding(defaults.blockSendingCaseSensitive, () -> config.blockSendingCaseSensitive, newVal -> config.blockSendingCaseSensitive = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
                         .group(ListOption.<String>createBuilder()
                                 .name(Text.literal("Block sending following chat messages:"))
-                                .binding(defaults.messagesToBlock, () -> config.messagesToBlock, newVal -> config.messagesToBlock = newVal)
+                                .binding(defaults.messagesToBlockSending, () -> config.messagesToBlockSending, newVal -> config.messagesToBlockSending = newVal)
                                 .controller(StringControllerBuilder::create)
                                 .initial("")
                                 .build())
@@ -58,18 +58,18 @@ public class ChatBlockConfig {
                                 .name(Text.literal("Block Receiving Custom Chat Messages"))
                                 .option(Option.<Boolean>createBuilder()
                                         .name(Text.literal("Case-Sensitive"))
-                                        .binding(defaults.hideCaseSensitive, () -> config.hideCaseSensitive, newVal -> config.hideCaseSensitive = newVal)
+                                        .binding(defaults.blockReceivingCaseSensitive, () -> config.blockReceivingCaseSensitive, newVal -> config.blockReceivingCaseSensitive = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
                                         .name(Text.literal("Ignore Formatting"))
-                                        .binding(defaults.hideIgnoreFormatting, () -> config.hideIgnoreFormatting, newVal -> config.hideIgnoreFormatting = newVal)
+                                        .binding(defaults.blockReceivingIgnoreFormatting, () -> config.blockReceivingIgnoreFormatting, newVal -> config.blockReceivingIgnoreFormatting = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .build())
                         .group(ListOption.<String>createBuilder()
                                 .name(Text.literal("Block receiving following chat messages:"))
-                                .binding(defaults.messagesToHide, () -> config.messagesToHide, newVal -> config.messagesToHide = newVal)
+                                .binding(defaults.messagesToBlockReceiving, () -> config.messagesToBlockReceiving, newVal -> config.messagesToBlockReceiving = newVal)
                                 .controller(StringControllerBuilder::create)
                                 .initial("")
                                 .build())
