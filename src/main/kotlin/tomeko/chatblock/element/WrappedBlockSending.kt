@@ -7,7 +7,7 @@ import tomeko.chatblock.ChatBlock
 import tomeko.chatblock.config.Macro
 
 @Suppress("UnstableAPIUsage")
-class WrappedMacro(
+class WrappedBlockSending(
     val macro: Macro
 ) {
     private val removeButton = BasicButton(32, 32, ChatBlock.MINUS_ICON, BasicButton.ALIGNMENT_CENTER, ColorPalette.PRIMARY_DESTRUCTIVE)
@@ -16,7 +16,7 @@ class WrappedMacro(
 
     init {
         removeButton.setClickAction {
-            MacroListOption.willBeRemoved = this
+            BlockSendingListOption.willBeRemoved = this
         }
     }
 

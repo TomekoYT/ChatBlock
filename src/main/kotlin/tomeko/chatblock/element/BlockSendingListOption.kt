@@ -9,23 +9,23 @@ import tomeko.chatblock.ChatBlock
 import tomeko.chatblock.config.Macro
 
 @Suppress("UnstableAPIUsage")
-object MacroListOption : BasicOption(null, null, "", "", "General", "", 2), IFocusable {
+object BlockSendingListOption : BasicOption(null, null, "", "", "General", "", 2), IFocusable {
     private val addButton = BasicButton(32, 32, ChatBlock.PLUS_ICON, BasicButton.ALIGNMENT_CENTER, ColorPalette.PRIMARY)
-    var wrappedMacros: MutableList<WrappedMacro> = ArrayList()
-    var willBeRemoved: WrappedMacro? = null
+    var wrappedBlockSendings: MutableList<WrappedBlockSending> = ArrayList()
+    var willBeRemoved: WrappedBlockSending? = null
 
     init {
         addButton.setClickAction {
-            wrappedMacros.add(WrappedMacro(Macro()))
+            wrappedBlockSendings.add(WrappedBlockSending(Macro()))
         }
     }
 
-    override fun getHeight() = wrappedMacros.size * 48 + 32
+    override fun getHeight() = wrappedBlockSendings.size * 48 + 32
 
     override fun draw(vg: Long, x: Int, y: Int, inputHandler: InputHandler) {
         var nextY = y
 
-        for (option in wrappedMacros) {
+        for (option in wrappedBlockSendings) {
             option.draw(vg, x.toFloat(), nextY.toFloat(), inputHandler)
             nextY += 48
         }
@@ -37,13 +37,13 @@ object MacroListOption : BasicOption(null, null, "", "", "General", "", 2), IFoc
 
     private fun checkWillBeRemoved() {
         val macro = willBeRemoved ?: return
-        wrappedMacros.remove(macro)
+        wrappedBlockSendings.remove(macro)
         willBeRemoved = null
     }
 
     override fun keyTyped(key: Char, keyCode: Int) {
-        wrappedMacros.any { it.keyTyped(key, keyCode) }
+        wrappedBlockSendings.any { it.keyTyped(key, keyCode) }
     }
 
-    override fun hasFocus() = wrappedMacros.any { it.hasFocus() }
+    override fun hasFocus() = wrappedBlockSendings.any { it.hasFocus() }
 }

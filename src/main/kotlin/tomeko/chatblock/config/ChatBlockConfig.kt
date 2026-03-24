@@ -12,8 +12,10 @@ import cc.polyfrost.oneconfig.config.data.OptionSize
 import cc.polyfrost.oneconfig.config.elements.BasicOption
 import cc.polyfrost.oneconfig.config.elements.OptionPage
 import tomeko.chatblock.ChatBlock
-import tomeko.chatblock.element.MacroListOption
-import tomeko.chatblock.element.WrappedMacro
+import tomeko.chatblock.element.BlockReceivingListOption
+import tomeko.chatblock.element.BlockSendingListOption
+import tomeko.chatblock.element.WrappedBlockReceiving
+import tomeko.chatblock.element.WrappedBlockSending
 import java.lang.reflect.Field
 
 object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBlock.MODID}.json") {
@@ -30,7 +32,7 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
     private var blockInfo = Runnable { }
 
     @JvmField
-    @CustomOption
+    @CustomOption(id = "block")
     var messagesToBlock: Array<Macro> = emptyArray()
 
     @JvmField
@@ -49,7 +51,7 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
     private var hideInfo = Runnable { }
 
     @JvmField
-    @CustomOption
+    @CustomOption(id = "send")
     var messagesToHide: Array<Macro> = emptyArray()
 
     override fun getCustomOption(
@@ -59,29 +61,38 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
         mod: Mod,
         migrate: Boolean
     ): BasicOption {
-        val option = MacroListOption
-        ConfigUtils.getSubCategory(page, "General", "").options.add(option)
-        return option
+        when (annotation.id) {
+            "block" -> {
+                val option = BlockReceivingListOption
+                ConfigUtils.getSubCategory(page, "General", "").options.add(option)
+                return option
+            }
+            else -> {
+                val option = BlockSendingListOption
+                ConfigUtils.getSubCategory(page, "General", "").options.add(option)
+                return option
+            }
+        }
     }
 
     override fun load() {
         super.load()
 
-        MacroListOption.wrappedMacros = messagesToBlock.mapTo(mutableListOf()) { macro ->
-            WrappedMacro(macro)
+        BlockReceivingListOption.wrappedBlockReceivings = messagesToBlock.mapTo(mutableListOf()) { macro ->
+            WrappedBlockReceiving(macro)
         }
 
-        MacroListOption.wrappedMacros = messagesToHide.mapTo(mutableListOf()) { macro ->
-            WrappedMacro(macro)
+        BlockSendingListOption.wrappedBlockSendings = messagesToHide.mapTo(mutableListOf()) { macro ->
+            WrappedBlockSending(macro)
         }
     }
 
     override fun save() {
-        messagesToBlock = MacroListOption.wrappedMacros.map { wrapped ->
+        messagesToBlock = BlockReceivingListOption.wrappedBlockReceivings.map { wrapped ->
             wrapped.macro
         }.toTypedArray()
 
-        messagesToHide = MacroListOption.wrappedMacros.map { wrapped ->
+        messagesToHide = BlockSendingListOption.wrappedBlockSendings.map { wrapped ->
             wrapped.macro
         }.toTypedArray()
 
