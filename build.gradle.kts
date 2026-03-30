@@ -29,7 +29,7 @@ blossom {
 group = "tomeko.chatblock"
 
 base {
-	archivesName.set("$mod_archives_name" + "_$mod_version" + "_1.8.9_forge")
+	archivesName.set("$mod_archives_name-$mod_version+$1.8.9-forge")
 }
 
 loom {
