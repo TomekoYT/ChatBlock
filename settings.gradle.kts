@@ -29,4 +29,4 @@ dependencyResolutionManagement {
 	}
 }
 
-rootProject.name = "TrueToggleSprint"
+rootProject.name = "ChatBlock"
