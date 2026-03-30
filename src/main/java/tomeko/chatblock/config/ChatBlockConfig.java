@@ -21,16 +21,16 @@ public class ChatBlockConfig {
             .build();
 
     @SerialEntry
-    public static boolean blockSendingCaseSensitive = false;
-    @SerialEntry
-    public static List<String> messagesToBlockSending = new ArrayList<>();
-
-    @SerialEntry
     public static boolean blockReceivingCaseSensitive = false;
     @SerialEntry
     public static boolean blockReceivingIgnoreFormatting = true;
     @SerialEntry
     public static List<String> messagesToBlockReceiving = new ArrayList<>();
+
+    @SerialEntry
+    public static boolean blockSendingCaseSensitive = false;
+    @SerialEntry
+    public static List<String> messagesToBlockSending = new ArrayList<>();
 
     public static Screen configScreen(Screen parent) {
         return YetAnotherConfigLib.create(CONFIG, ((defaults, config, builder) -> builder
@@ -38,21 +38,6 @@ public class ChatBlockConfig {
 
                 .category(ConfigCategory.createBuilder()
                         .name(Component.literal("Chat Block Config"))
-
-                        .group(OptionGroup.createBuilder()
-                                .name(Component.literal("Block Sending Custom Chat Messages"))
-                                .option(Option.<Boolean>createBuilder()
-                                        .name(Component.literal("Case-Sensitive"))
-                                        .binding(defaults.blockSendingCaseSensitive, () -> config.blockSendingCaseSensitive, newVal -> config.blockSendingCaseSensitive = newVal)
-                                        .controller(TickBoxControllerBuilder::create)
-                                        .build())
-                                .build())
-                        .group(ListOption.<String>createBuilder()
-                                .name(Component.literal("Block sending following chat messages:"))
-                                .binding(defaults.messagesToBlockSending, () -> config.messagesToBlockSending, newVal -> config.messagesToBlockSending = newVal)
-                                .controller(StringControllerBuilder::create)
-                                .initial("")
-                                .build())
 
                         .group(OptionGroup.createBuilder()
                                 .name(Component.literal("Block Receiving Custom Chat Messages"))
@@ -70,6 +55,22 @@ public class ChatBlockConfig {
                         .group(ListOption.<String>createBuilder()
                                 .name(Component.literal("Block receiving following chat messages:"))
                                 .binding(defaults.messagesToBlockReceiving, () -> config.messagesToBlockReceiving, newVal -> config.messagesToBlockReceiving = newVal)
+                                .controller(StringControllerBuilder::create)
+                                .initial("")
+                                .build())
+
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Component.literal("Block Sending Custom Chat Messages"))
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Component.literal("Case-Sensitive"))
+                                        .binding(defaults.blockSendingCaseSensitive, () -> config.blockSendingCaseSensitive, newVal -> config.blockSendingCaseSensitive = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .build())
+                        .group(ListOption.<String>createBuilder()
+                                .name(Component.literal("Block sending following chat messages:"))
+                                .binding(defaults.messagesToBlockSending, () -> config.messagesToBlockSending, newVal -> config.messagesToBlockSending = newVal)
                                 .controller(StringControllerBuilder::create)
                                 .initial("")
                                 .build())

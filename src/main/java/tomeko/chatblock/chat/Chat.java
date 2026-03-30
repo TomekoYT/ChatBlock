@@ -7,22 +7,9 @@ import tomeko.chatblock.config.ChatBlockConfig;
 
 public class Chat {
     public static void register() {
+        ClientReceiveMessageEvents.ALLOW_GAME.register(Chat::BlockReceivingCustomMessages);
         ClientSendMessageEvents.ALLOW_CHAT.register(Chat::BlockSendingCustomMessages);
         ClientSendMessageEvents.ALLOW_COMMAND.register(Chat::BlockSendingCustomMessages);
-        ClientReceiveMessageEvents.ALLOW_GAME.register(Chat::BlockReceivingCustomMessages);
-    }
-
-    private static boolean BlockSendingCustomMessages(String message) {
-        for (String messageToBlock : ChatBlockConfig.messagesToBlockSending) {
-            if (messageToBlock.isEmpty()) continue;
-
-            if (
-                    (ChatBlockConfig.blockSendingCaseSensitive && message.contains(messageToBlock))
-                    || (!ChatBlockConfig.blockSendingCaseSensitive && message.toLowerCase().contains(messageToBlock.toLowerCase()))
-            ) return false;
-        }
-
-        return true;
     }
 
     private static boolean BlockReceivingCustomMessages(Component messageText, boolean fromActionBar) {
@@ -40,6 +27,19 @@ public class Chat {
             if (
                     (ChatBlockConfig.blockReceivingCaseSensitive && message.contains(messageToHide))
                             || (!ChatBlockConfig.blockReceivingCaseSensitive && message.toLowerCase().contains(messageToHide.toLowerCase()))
+            ) return false;
+        }
+
+        return true;
+    }
+
+    private static boolean BlockSendingCustomMessages(String message) {
+        for (String messageToBlock : ChatBlockConfig.messagesToBlockSending) {
+            if (messageToBlock.isEmpty()) continue;
+
+            if (
+                    (ChatBlockConfig.blockSendingCaseSensitive && message.contains(messageToBlock))
+                    || (!ChatBlockConfig.blockSendingCaseSensitive && message.toLowerCase().contains(messageToBlock.toLowerCase()))
             ) return false;
         }
 
