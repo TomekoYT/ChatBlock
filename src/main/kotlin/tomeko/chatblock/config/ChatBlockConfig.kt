@@ -21,21 +21,6 @@ import java.lang.reflect.Field
 object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBlock.MODID}.json") {
 
     @JvmField
-    @Switch(name = "Block Sending Case Sensitive", size = OptionSize.SINGLE)
-    var blockSendingCaseSensitive: Boolean = false
-
-    @Info(
-        text = "Block sending following chat messages:",
-        type = InfoType.INFO,
-        size = 2
-    )
-    private var blockInfo = Runnable { }
-
-    @JvmField
-    @CustomOption(id = "blockSending")
-    var messagesToBlockSending: Array<Macro> = emptyArray()
-
-    @JvmField
     @Switch(name = "Block Receiving Case Sensitive", size = OptionSize.SINGLE)
     var blockReceivingCaseSensitive: Boolean = false
 
@@ -54,6 +39,22 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
     @CustomOption(id = "blockReceiving")
     var messagesToBlockReceiving: Array<Macro> = emptyArray()
 
+
+    @JvmField
+    @Switch(name = "Block Sending Case Sensitive", size = OptionSize.SINGLE)
+    var blockSendingCaseSensitive: Boolean = false
+
+    @Info(
+        text = "Block sending following chat messages:",
+        type = InfoType.INFO,
+        size = 2
+    )
+    private var blockInfo = Runnable { }
+
+    @JvmField
+    @CustomOption(id = "blockSending")
+    var messagesToBlockSending: Array<Macro> = emptyArray()
+
     override fun getCustomOption(
         field: Field,
         annotation: CustomOption,
@@ -62,13 +63,14 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
         migrate: Boolean
     ): BasicOption {
         when (annotation.id) {
-            "blockSending" -> {
-                val option = BlockSendingListOption
+            "blockReceiving" -> {
+                val option = BlockReceivingListOption
                 ConfigUtils.getSubCategory(page, "General", "").options.add(option)
                 return option
+
             }
             else -> {
-                val option = BlockReceivingListOption
+                val option = BlockSendingListOption
                 ConfigUtils.getSubCategory(page, "General", "").options.add(option)
                 return option
             }
@@ -78,21 +80,21 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
     override fun load() {
         super.load()
 
-        BlockSendingListOption.wrappedBlockSendings = messagesToBlockSending.mapTo(mutableListOf()) { macro ->
-            WrappedBlockSending(macro)
-        }
-
         BlockReceivingListOption.wrappedBlockReceivings = messagesToBlockReceiving.mapTo(mutableListOf()) { macro ->
             WrappedBlockReceiving(macro)
+        }
+
+        BlockSendingListOption.wrappedBlockSendings = messagesToBlockSending.mapTo(mutableListOf()) { macro ->
+            WrappedBlockSending(macro)
         }
     }
 
     override fun save() {
-        messagesToBlockSending = BlockSendingListOption.wrappedBlockSendings.map { wrapped ->
+        messagesToBlockReceiving = BlockReceivingListOption.wrappedBlockReceivings.map { wrapped ->
             wrapped.macro
         }.toTypedArray()
 
-        messagesToBlockReceiving = BlockReceivingListOption.wrappedBlockReceivings.map { wrapped ->
+        messagesToBlockSending = BlockSendingListOption.wrappedBlockSendings.map { wrapped ->
             wrapped.macro
         }.toTypedArray()
 
