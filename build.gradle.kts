@@ -1,23 +1,23 @@
-val mod_name = property("mod_name")
-val mod_id = property("mod_id")
-val mod_version = property("mod_version")
-val mod_description = property("mod_description")
-val mod_archive_name = property("mod_archive_name")
+val mod_name: String by project
+val mod_id: String by project
+val mod_version: String by project
+val mod_description: String by project
+val mod_archives_name: String by project
 
-val minecraft_version = property("minecraft_version")
-val yarn_mappings_version = property("yarn_mappings_version")
-val fabric_loader_version = property("fabric_loader_version")
-val fabric_api_version = property("fabric_api_version")
+val java_version: String by project
+val minecraft_version: String by project
+val fabric_loader_version: String by project
+val fabric_api_version: String by project
 
-val yacl_version = property("yacl_version")
-val mod_menu_version = property("mod_menu_version")
+val yacl_version: String by project
+val mod_menu_version: String by project
 
 plugins {
-	id("net.fabricmc.fabric-loom-remap")
+	id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT"
 }
 
 base {
-	archivesName.set("$mod_archive_name" + "_$mod_version" + "_$minecraft_version+_fabric")
+	archivesName.set("$mod_archives_name-$mod_version+$minecraft_version-fabric")
 }
 
 repositories {
@@ -25,9 +25,17 @@ repositories {
 	maven("https://maven.terraformersmc.com/")
 }
 
+loom {
+	runConfigs.all {
+		ideConfigGenerated(stonecutter.current.isActive)
+		runDir = "../../run"
+	}
+	runConfigs.remove(runConfigs["server"])
+}
+
 dependencies {
 	minecraft("com.mojang:minecraft:$minecraft_version")
-	mappings("net.fabricmc:yarn:$yarn_mappings_version:v2")
+	mappings(loom.officialMojangMappings())
 	modImplementation("net.fabricmc:fabric-loader:$fabric_loader_version")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
@@ -42,6 +50,7 @@ tasks.processResources {
 		"mod_version" to mod_version,
 		"mod_description" to mod_description,
 
+		"java_version" to java_version,
 		"minecraft_version" to minecraft_version,
 		"fabric_loader_version" to fabric_loader_version,
 		"fabric_api_version" to fabric_api_version,
@@ -58,13 +67,13 @@ tasks.processResources {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-	options.release = 21
+	options.release = java_version.toInt()
 }
 
 java {
 	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.toVersion(java_version)
+	targetCompatibility = JavaVersion.toVersion(java_version)
 }
 
 tasks.jar {

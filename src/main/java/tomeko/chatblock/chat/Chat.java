@@ -2,7 +2,7 @@ package tomeko.chatblock.chat;
 
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import tomeko.chatblock.config.ChatBlockConfig;
 
 public class Chat {
@@ -25,7 +25,7 @@ public class Chat {
         return true;
     }
 
-    private static boolean BlockReceivingCustomMessages(Text messageText, boolean fromActionBar) {
+    private static boolean BlockReceivingCustomMessages(Component messageText, boolean fromActionBar) {
         if (fromActionBar || messageText == null) {
             return true;
         }
