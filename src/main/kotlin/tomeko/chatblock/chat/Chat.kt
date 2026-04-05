@@ -4,7 +4,6 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import tomeko.chatblock.config.ChatBlockConfig
-import java.util.Locale
 
 class Chat {
     @SubscribeEvent
@@ -26,11 +25,7 @@ class Chat {
             if (messageToHide.isEmpty()) continue
 
             if ((ChatBlockConfig.blockReceivingCaseSensitive && message.contains(messageToHide))
-                || (!ChatBlockConfig.blockReceivingCaseSensitive && message.lowercase(Locale.getDefault()).contains(
-                    messageToHide.lowercase(
-                        Locale.getDefault()
-                    )
-                ))
+                || (!ChatBlockConfig.blockReceivingCaseSensitive && message.lowercase().contains(messageToHide.lowercase()))
             ) {
                 event.setCanceled(true)
                 return
