@@ -18,7 +18,6 @@ import tomeko.chatblock.element.WrappedBlock
 import java.lang.reflect.Field
 
 object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBlock.MODID}.json") {
-
     @JvmField
     @Switch(name = "Block Receiving Case Sensitive", size = OptionSize.SINGLE)
     var blockReceivingCaseSensitive: Boolean = false
@@ -36,7 +35,7 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
 
     @JvmField
     @CustomOption(id = "blockReceiving")
-    var messagesToBlockReceiving: Array<Macro> = emptyArray()
+    var messagesToBlockReceiving: Array<String> = emptyArray()
 
 
     @JvmField
@@ -52,7 +51,7 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
 
     @JvmField
     @CustomOption(id = "blockSending")
-    var messagesToBlockSending: Array<Macro> = emptyArray()
+    var messagesToBlockSending: Array<String> = emptyArray()
 
     override fun getCustomOption(
         field: Field,
@@ -68,6 +67,7 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
                 return option
 
             }
+
             else -> {
                 val option = BlockSendingListOption
                 ConfigUtils.getSubCategory(page, "General", "").options.add(option)
@@ -79,21 +79,19 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
     override fun load() {
         super.load()
 
-        // Populate receiving list
         BlockReceivingListOption.apply {
             items.clear()
-            items.addAll(messagesToBlockReceiving.map { macro ->
-                WrappedBlock(macro) {
+            items.addAll(messagesToBlockReceiving.map { message ->
+                WrappedBlock(message) {
                     willBeRemoved = it
                 }
             })
         }
 
-        // Populate sending list
         BlockSendingListOption.apply {
             items.clear()
-            items.addAll(messagesToBlockSending.map { macro ->
-                WrappedBlock(macro) {
+            items.addAll(messagesToBlockSending.map { message ->
+                WrappedBlock(message) {
                     willBeRemoved = it
                 }
             })
@@ -102,11 +100,11 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
 
     override fun save() {
         messagesToBlockReceiving = BlockReceivingListOption.items
-            .map { it.macro }
+            .map { it.message }
             .toTypedArray()
 
         messagesToBlockSending = BlockSendingListOption.items
-            .map { it.macro }
+            .map { it.message }
             .toTypedArray()
 
         super.save()

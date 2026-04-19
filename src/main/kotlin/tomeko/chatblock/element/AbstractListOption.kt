@@ -7,8 +7,7 @@ import cc.polyfrost.oneconfig.utils.InputHandler
 import cc.polyfrost.oneconfig.utils.color.ColorPalette
 import tomeko.chatblock.ChatBlock
 
-@Suppress("UnstableAPIUsage")
-abstract class AbstractBlockListOption<T> :
+abstract class AbstractListOption<T> :
     BasicOption(null, null, "", "", "General", "", 2), IFocusable {
 
     protected val addButton = BasicButton(
@@ -23,7 +22,7 @@ abstract class AbstractBlockListOption<T> :
 
     init {
         addButton.setClickAction {
-            items.add(createWrapped()) // ✅ safe now
+            items.add(createWrapped())
         }
     }
 

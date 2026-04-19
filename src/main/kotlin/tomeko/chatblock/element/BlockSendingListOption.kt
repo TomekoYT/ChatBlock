@@ -1,13 +1,10 @@
 package tomeko.chatblock.element
 
 import cc.polyfrost.oneconfig.utils.InputHandler
-import tomeko.chatblock.config.Macro
 
-@Suppress("UnstableAPIUsage")
-object BlockSendingListOption : AbstractBlockListOption<WrappedBlock>() {
-
+object BlockSendingListOption : AbstractListOption<WrappedBlock>() {
     override fun createWrapped() =
-        WrappedBlock(Macro()) {
+        WrappedBlock(String()) {
             willBeRemoved = it
         }
 

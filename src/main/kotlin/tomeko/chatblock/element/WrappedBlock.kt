@@ -4,11 +4,9 @@ import cc.polyfrost.oneconfig.gui.elements.BasicButton
 import cc.polyfrost.oneconfig.utils.InputHandler
 import cc.polyfrost.oneconfig.utils.color.ColorPalette
 import tomeko.chatblock.ChatBlock
-import tomeko.chatblock.config.Macro
 
-@Suppress("UnstableAPIUsage")
 class WrappedBlock(
-    val macro: Macro,
+    var message: String,
     private val onRemove: (WrappedBlock) -> Unit
 ) {
     private val removeButton = BasicButton(
@@ -18,8 +16,10 @@ class WrappedBlock(
         ColorPalette.PRIMARY_DESTRUCTIVE
     )
 
-    private val checkbox = MacroCheckbox(macro)
-    private val textField = MacroTextField(macro)
+    private val textField = TextField(
+        getMessage = { message },
+        setMessage = { message = it }
+    )
 
     init {
         removeButton.setClickAction {
@@ -29,8 +29,7 @@ class WrappedBlock(
 
     fun draw(vg: Long, x: Float, y: Float, inputHandler: InputHandler) {
         removeButton.draw(vg, x, y, inputHandler)
-        checkbox.draw(vg, x + 58, y, inputHandler)
-        textField.draw(vg, x + 96, y, inputHandler)
+        textField.draw(vg, x + 40, y, inputHandler)
     }
 
     fun keyTyped(key: Char, keyCode: Int) =

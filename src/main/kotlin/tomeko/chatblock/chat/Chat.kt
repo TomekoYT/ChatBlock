@@ -18,14 +18,12 @@ class Chat {
             message = removeFormatting(message)
         }
 
-        for (macro in ChatBlockConfig.messagesToBlockReceiving) {
-            if (!macro.enabled) continue
-
-            val messageToHide = macro.text
+        for (messageToHide in ChatBlockConfig.messagesToBlockReceiving) {
             if (messageToHide.isEmpty()) continue
 
             if ((ChatBlockConfig.blockReceivingCaseSensitive && message.contains(messageToHide))
-                || (!ChatBlockConfig.blockReceivingCaseSensitive && message.lowercase().contains(messageToHide.lowercase()))
+                || (!ChatBlockConfig.blockReceivingCaseSensitive && message.lowercase()
+                    .contains(messageToHide.lowercase()))
             ) {
                 event.setCanceled(true)
                 return

@@ -6,16 +6,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tomeko.chatblock.config.ChatBlockConfig;
-import tomeko.chatblock.config.Macro;
 
 @Mixin(GuiScreen.class)
 public class GuiScreenMixin {
     @Inject(method = "sendChatMessage(Ljava/lang/String;Z)V", at = @At("HEAD"), cancellable = true)
     private void blockChatMessage(String message, boolean addToChat, CallbackInfo ci) {
-        for (Macro macro : ChatBlockConfig.messagesToBlockSending) {
-            if (!macro.getEnabled()) continue;
-
-            String messageToBlock = macro.getText();
+        for (String messageToBlock : ChatBlockConfig.messagesToBlockSending) {
             if (messageToBlock.isEmpty()) continue;
 
             if (
