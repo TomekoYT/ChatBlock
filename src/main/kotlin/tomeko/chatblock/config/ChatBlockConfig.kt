@@ -14,8 +14,7 @@ import cc.polyfrost.oneconfig.config.elements.OptionPage
 import tomeko.chatblock.ChatBlock
 import tomeko.chatblock.element.BlockReceivingListOption
 import tomeko.chatblock.element.BlockSendingListOption
-import tomeko.chatblock.element.WrappedBlockReceiving
-import tomeko.chatblock.element.WrappedBlockSending
+import tomeko.chatblock.element.WrappedBlock
 import java.lang.reflect.Field
 
 object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBlock.MODID}.json") {
@@ -80,23 +79,35 @@ object ChatBlockConfig : Config(Mod(ChatBlock.NAME, ModType.UTIL_QOL), "${ChatBl
     override fun load() {
         super.load()
 
-        BlockReceivingListOption.wrappedBlockReceivings = messagesToBlockReceiving.mapTo(mutableListOf()) { macro ->
-            WrappedBlockReceiving(macro)
+        // Populate receiving list
+        BlockReceivingListOption.apply {
+            items.clear()
+            items.addAll(messagesToBlockReceiving.map { macro ->
+                WrappedBlock(macro) {
+                    willBeRemoved = it
+                }
+            })
         }
 
-        BlockSendingListOption.wrappedBlockSendings = messagesToBlockSending.mapTo(mutableListOf()) { macro ->
-            WrappedBlockSending(macro)
+        // Populate sending list
+        BlockSendingListOption.apply {
+            items.clear()
+            items.addAll(messagesToBlockSending.map { macro ->
+                WrappedBlock(macro) {
+                    willBeRemoved = it
+                }
+            })
         }
     }
 
     override fun save() {
-        messagesToBlockReceiving = BlockReceivingListOption.wrappedBlockReceivings.map { wrapped ->
-            wrapped.macro
-        }.toTypedArray()
+        messagesToBlockReceiving = BlockReceivingListOption.items
+            .map { it.macro }
+            .toTypedArray()
 
-        messagesToBlockSending = BlockSendingListOption.wrappedBlockSendings.map { wrapped ->
-            wrapped.macro
-        }.toTypedArray()
+        messagesToBlockSending = BlockSendingListOption.items
+            .map { it.macro }
+            .toTypedArray()
 
         super.save()
     }

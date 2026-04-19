@@ -7,16 +7,23 @@ import tomeko.chatblock.ChatBlock
 import tomeko.chatblock.config.Macro
 
 @Suppress("UnstableAPIUsage")
-class WrappedBlockSending(
-    val macro: Macro
+class WrappedBlock(
+    val macro: Macro,
+    private val onRemove: (WrappedBlock) -> Unit
 ) {
-    private val removeButton = BasicButton(32, 32, ChatBlock.MINUS_ICON, BasicButton.ALIGNMENT_CENTER, ColorPalette.PRIMARY_DESTRUCTIVE)
+    private val removeButton = BasicButton(
+        32, 32,
+        ChatBlock.MINUS_ICON,
+        BasicButton.ALIGNMENT_CENTER,
+        ColorPalette.PRIMARY_DESTRUCTIVE
+    )
+
     private val checkbox = MacroCheckbox(macro)
     private val textField = MacroTextField(macro)
 
     init {
         removeButton.setClickAction {
-            BlockSendingListOption.willBeRemoved = this
+            onRemove(this)
         }
     }
 
@@ -26,7 +33,9 @@ class WrappedBlockSending(
         textField.draw(vg, x + 96, y, inputHandler)
     }
 
-    fun keyTyped(key: Char, keyCode: Int) = textField.isKeyTyped(key, keyCode)
+    fun keyTyped(key: Char, keyCode: Int) =
+        textField.isKeyTyped(key, keyCode)
 
-    fun hasFocus() = textField.isToggled
+    fun hasFocus() =
+        textField.isToggled
 }
