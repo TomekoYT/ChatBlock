@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import tomeko.chatblock.chat.Chat
 import tomeko.chatblock.config.ChatBlockConfig
+import tomeko.chatblock.gui.CloseInactiveConfigScreen
 
 @Mod(modid = ChatBlock.MODID, name = ChatBlock.NAME, version = ChatBlock.VERSION, modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter")
 object ChatBlock {
@@ -21,5 +22,6 @@ object ChatBlock {
         ChatBlockConfig.initialize()
         EventManager.INSTANCE.register(this)
         Chat.register()
+        CloseInactiveConfigScreen.register()
     }
 }
