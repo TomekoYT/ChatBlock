@@ -10,9 +10,9 @@ import tomeko.chatblock.gui.CloseInactiveConfigScreen
 
 @Mod(modid = ChatBlock.MODID, name = ChatBlock.NAME, version = ChatBlock.VERSION, modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter")
 object ChatBlock {
-    const val MODID: String = "@ID@"
-    const val NAME: String = "@NAME@"
-    const val VERSION: String = "@VER@"
+    const val MODID: String = "chatblock"
+    const val NAME: String = "ChatBlock"
+    const val VERSION: String = "1.0.0"
 
     val PLUS_ICON = SVG("/assets/chatblock/icons/plus.svg")
     val MINUS_ICON = SVG("/assets/chatblock/icons/minus.svg")

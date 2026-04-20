@@ -1,13 +1,12 @@
 package tomeko.chatblock.element
 
 import cc.polyfrost.oneconfig.gui.elements.text.TextInputField
-import cc.polyfrost.oneconfig.internal.assets.SVGs
 import cc.polyfrost.oneconfig.utils.InputHandler
 
 class TextField(
     private val getMessage: () -> String,
     private val setMessage: (String) -> Unit
-) : TextInputField(608, 32, "", false, false, SVGs.TEXT_INPUT) {
+) : TextInputField(608, 32, "", false, false, null) {
 
     override fun draw(vg: Long, x: Float, y: Float, inputHandler: InputHandler) {
         input = getMessage()

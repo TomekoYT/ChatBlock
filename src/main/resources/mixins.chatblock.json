@@ -1,13 +1,7 @@
 {
-  "compatibilityLevel": "JAVA_8",
+  "package": "${basePackage}.mixin",
+  "plugin": "${basePackage}.init.AutoDiscoveryMixinPlugin",
+  "refmap": "mixins.${modid}.refmap.json",
   "minVersion": "0.7",
-  "package": "tomeko.chatblock.mixin",
-  "refmap": "mixins.${id}.refmap.json",
-  "injectors": {
-    "maxShiftBy": 5
-  },
-  "client": [
-    "GuiScreenMixin"
-  ],
-  "verbose": true
+  "compatibilityLevel": "JAVA_8"
 }

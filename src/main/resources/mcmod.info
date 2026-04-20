@@ -1,10 +1,10 @@
 [
   {
-    "modid": "${id}",
-    "name": "${name}",
+    "modid": "${modid}",
+    "name": "Chat Block",
     "description": "Block sending/receiving custom chat messages",
     "version": "${version}",
-    "mcversion": "${mcVersionStr}",
+    "mcversion": "${mcversion}",
     "url": "https://modrinth.com/mod/chatblock",
     "updateUrl": "https://modrinth.com/mod/chatblock",
     "authorList": [
