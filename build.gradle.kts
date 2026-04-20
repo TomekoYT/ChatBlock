@@ -13,7 +13,7 @@ val yacl_version: String by project
 val mod_menu_version: String by project
 
 plugins {
-	id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT"
+	id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT"
 }
 
 base {
@@ -74,6 +74,10 @@ java {
 	withSourcesJar()
 	sourceCompatibility = JavaVersion.toVersion(java_version)
 	targetCompatibility = JavaVersion.toVersion(java_version)
+
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(java_version))
+	}
 }
 
 tasks.jar {
