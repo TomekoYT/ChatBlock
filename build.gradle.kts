@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 val mod_name: String by project
 val mod_id: String by project
 val mod_version: String by project
@@ -8,12 +10,14 @@ val java_version: String by project
 val minecraft_version: String by project
 val fabric_loader_version: String by project
 val fabric_api_version: String by project
+val fabric_language_kotlin_version: String by project
 
 val yacl_version: String by project
 val mod_menu_version: String by project
 
 plugins {
 	id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT"
+	id("org.jetbrains.kotlin.jvm") version "2.3.20"
 }
 
 base {
@@ -38,6 +42,7 @@ dependencies {
 	mappings(loom.officialMojangMappings())
 	modImplementation("net.fabricmc:fabric-loader:$fabric_loader_version")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
+	modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_language_kotlin_version")
 
 	modImplementation("dev.isxander:yet-another-config-lib:$yacl_version")
 	modImplementation("com.terraformersmc:modmenu:$mod_menu_version")
@@ -54,6 +59,7 @@ tasks.processResources {
 		"minecraft_version" to minecraft_version,
 		"fabric_loader_version" to fabric_loader_version,
 		"fabric_api_version" to fabric_api_version,
+		"fabric_language_kotlin_version" to fabric_language_kotlin_version,
 
 		"yacl_version" to yacl_version,
 		"mod_menu_version" to mod_menu_version
@@ -77,6 +83,12 @@ java {
 
 	toolchain {
 		languageVersion.set(JavaLanguageVersion.of(java_version))
+	}
+}
+
+kotlin {
+	compilerOptions {
+		jvmTarget = JvmTarget.JVM_21
 	}
 }
 

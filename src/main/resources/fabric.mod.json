@@ -17,10 +17,16 @@
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"tomeko.chatblock.ChatBlock"
+			{
+				"value": "tomeko.chatblock.ChatBlock",
+				"adapter": "kotlin"
+			}
 		],
 		"modmenu": [
-			"tomeko.chatblock.config.ModMenuIntegration"
+			{
+				"value": "tomeko.chatblock.config.ModMenuIntegration",
+				"adapter": "kotlin"
+			}
 		]
 	},
 	"depends": {
@@ -28,6 +34,7 @@
 		"minecraft": ">=${minecraft_version}",
 		"fabricloader": ">=${fabric_loader_version}",
 		"fabric-api": ">=${fabric_api_version}",
+		"fabric-language-kotlin": ">=${fabric_language_kotlin_version}",
 
 		"yet_another_config_lib_v3": ">=${yacl_version}",
 		"modmenu": ">=${mod_menu_version}"
