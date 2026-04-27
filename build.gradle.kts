@@ -1,101 +1,159 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.apache.commons.lang3.SystemUtils
+import dev.architectury.pack200.java.Pack200Adapter
 
 val mod_name: String by project
 val mod_id: String by project
 val mod_version: String by project
 val mod_description: String by project
 val mod_archives_name: String by project
+val base_group: String by project
 
 val java_version: String by project
 val minecraft_version: String by project
-val fabric_loader_version: String by project
-val fabric_api_version: String by project
-val fabric_language_kotlin_version: String by project
 
-val yacl_version: String by project
-val mod_menu_version: String by project
 
 plugins {
-	id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT"
-	id("org.jetbrains.kotlin.jvm") version "2.3.20"
-}
-
-base {
-	archivesName.set("$mod_archives_name-$mod_version-$minecraft_version+_fabric")
-}
-
-repositories {
-	maven("https://maven.isxander.dev/releases")
-	maven("https://maven.terraformersmc.com/")
-}
-
-loom {
-	runConfigs.all {
-		ideConfigGenerated(stonecutter.current.isActive)
-		runDir = "../../run"
-	}
-	runConfigs.remove(runConfigs["server"])
-}
-
-dependencies {
-	minecraft("com.mojang:minecraft:$minecraft_version")
-	mappings(loom.officialMojangMappings())
-	modImplementation("net.fabricmc:fabric-loader:$fabric_loader_version")
-	modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
-	modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_language_kotlin_version")
-
-	modImplementation("dev.isxander:yet-another-config-lib:$yacl_version")
-	modImplementation("com.terraformersmc:modmenu:$mod_menu_version")
-}
-
-tasks.processResources {
-	val props = mapOf(
-		"mod_id" to mod_id,
-		"mod_name" to mod_name,
-		"mod_version" to mod_version,
-		"mod_description" to mod_description,
-
-		"java_version" to java_version,
-		"minecraft_version" to minecraft_version,
-		"fabric_loader_version" to fabric_loader_version,
-		"fabric_api_version" to fabric_api_version,
-		"fabric_language_kotlin_version" to fabric_language_kotlin_version,
-
-		"yacl_version" to yacl_version,
-		"mod_menu_version" to mod_menu_version
-	)
-
-	inputs.properties(props)
-
-	filesMatching("fabric.mod.json") {
-		expand(props)
-	}
-}
-
-tasks.withType<JavaCompile>().configureEach {
-	options.release = java_version.toInt()
+    idea
+    java
+    kotlin("jvm") version "2.0.0"
+    id("gg.essential.loom") version "1.9.31"
+    id("dev.architectury.architectury-pack200") version "0.1.3"
+    id("com.gradleup.shadow") version "9.4.1"
 }
 
 java {
-	withSourcesJar()
-	sourceCompatibility = JavaVersion.toVersion(java_version)
-	targetCompatibility = JavaVersion.toVersion(java_version)
-
-	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(java_version))
-	}
+    toolchain.languageVersion.set(JavaLanguageVersion.of(java_version))
 }
 
-kotlin {
-	compilerOptions {
-		jvmTarget = JvmTarget.JVM_21
-	}
+loom {
+    runs {
+        getByName("client") {
+            property("mixin.debug", "true")
+            programArgs("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
+            programArgs("--tweakClass", "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker")
+        }
+    }
+    runConfigs {
+        getByName("client") {
+            if (SystemUtils.IS_OS_MAC_OSX) {
+                vmArgs.remove("-XstartOnFirstThread")
+            }
+        }
+        remove(getByName("server"))
+    }
+    forge {
+        pack200Provider.set(Pack200Adapter())
+        mixinConfig("mixins.$mod_id.json")
+    }
+
+    mixin {
+        defaultRefmapName.set("mixins.$mod_id.refmap.json")
+    }
+}
+
+tasks.compileJava {
+    dependsOn(tasks.processResources)
+}
+
+sourceSets.main {
+    output.setResourcesDir(sourceSets.main.flatMap { it.java.classesDirectory })
+    java.srcDir(layout.projectDirectory.dir("src/main/kotlin"))
+    kotlin.destinationDirectory.set(java.destinationDirectory)
+}
+
+repositories {
+    mavenCentral()
+    maven("https://repo.spongepowered.org/maven/")
+    maven("https://repo.polyfrost.cc/releases")
+}
+
+val shadowImpl: Configuration by configurations.creating {
+    configurations.implementation.get().extendsFrom(this)
+}
+
+dependencies {
+    minecraft("com.mojang:minecraft:$minecraft_version")
+    mappings("de.oceanlabs.mcp:mcp_stable:22-$minecraft_version")
+    forge("net.minecraftforge:forge:$minecraft_version-11.15.1.2318-$minecraft_version")
+
+    shadowImpl(kotlin("stdlib-jdk8"))
+
+    shadowImpl("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        isTransitive = false
+    }
+    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT")
+    annotationProcessor("org.ow2.asm:asm-debug-all:5.2")
+    annotationProcessor("com.google.guava:guava:32.1.2-jre")
+    annotationProcessor("com.google.code.gson:gson:2.8.9")
+
+    compileOnly("cc.polyfrost:oneconfig-$minecraft_version-forge:0.2.2-alpha+")
+}
+
+tasks.withType(JavaCompile::class) {
+    options.encoding = "UTF-$java_version"
+}
+
+tasks.withType(org.gradle.jvm.tasks.Jar::class) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveBaseName.set("$mod_archives_name-$mod_version-${minecraft_version}_forge")
+    manifest.attributes.run {
+        this["FMLCorePluginContainsFMLMod"] = "true"
+        this["ForceLoadAsMod"] = "true"
+
+        this["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
+        this["MixinConfigs"] = "mixins.$mod_id.json"
+    }
+}
+
+tasks.processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    val props = mapOf(
+        "mod_id" to mod_id,
+        "mod_name" to mod_name,
+        "mod_version" to mod_version,
+        "mod_description" to mod_description,
+
+        "java_version" to java_version,
+        "minecraft_version" to minecraft_version,
+
+        "base_group" to base_group
+    )
+
+    inputs.properties(props)
+
+    filesMatching(listOf("mcmod.info", "mixins.$mod_id.json")) {
+        expand(props)
+    }
+}
+
+val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
+    archiveClassifier.set("")
+    from(tasks.shadowJar)
+    input.set(tasks.shadowJar.get().archiveFile)
 }
 
 tasks.jar {
-	inputs.property("archivesName", base.archivesName)
-
-	from("LICENSE") {
-		rename { "${it}_${base.archivesName.get()}" }
-	}
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier.set("without-deps")
+    destinationDirectory.set(layout.buildDirectory.dir("intermediates"))
+    manifest.attributes += mapOf(
+        "ModSide" to "CLIENT",
+        "TweakOrder" to 0,
+        "ForceLoadAsMod" to true,
+        "TweakClass" to "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker"
+    )
 }
+
+tasks.shadowJar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    destinationDirectory.set(layout.buildDirectory.dir("intermediates"))
+    archiveClassifier.set("non-obfuscated-with-deps")
+    configurations = listOf(shadowImpl)
+
+    fun relocate(name: String) = relocate(name, "$base_group.deps.$name")
+    relocate("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+")
+}
+
+tasks.assemble.get().dependsOn(tasks.remapJar)
+
