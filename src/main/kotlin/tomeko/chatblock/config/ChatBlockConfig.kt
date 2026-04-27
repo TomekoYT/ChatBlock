@@ -36,7 +36,7 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL), "${Co
 
     //? if = 1.8.9 {
     @JvmField
-    @Switch(name = "Block Receiving Case Sensitive", size = OptionSize.SINGLE)
+    @Switch(name = "Case sensitive", size = OptionSize.SINGLE)
     //?} else {
     /*@SerialEntry
     *///?}
@@ -44,11 +44,19 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL), "${Co
 
     //? if = 1.8.9 {
     @JvmField
-    @Switch(name = "Ignore Formatting", size = OptionSize.SINGLE)
+    @Switch(name = "Ignore formatting", size = OptionSize.SINGLE)
     //?} else {
     /*@SerialEntry
     *///?}
     var blockReceivingIgnoreFormatting: Boolean = true
+
+    //? if = 1.8.9 {
+    @JvmField
+    @Switch(name = "Send message informing about a block", size = OptionSize.SINGLE)
+    //?} else {
+    /*@SerialEntry
+    *///?}
+    var blockReceivingInfoMessage: Boolean = false
 
     //? if = 1.8.9 {
     @Info(
@@ -70,11 +78,19 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL), "${Co
 
     //? if = 1.8.9 {
     @JvmField
-    @Switch(name = "Block Sending Case Sensitive", size = OptionSize.SINGLE)
+    @Switch(name = "Case sensitive", size = OptionSize.SINGLE)
     //?} else {
     /*@SerialEntry
     *///?}
     var blockSendingCaseSensitive: Boolean = false
+
+    //? if = 1.8.9 {
+    @JvmField
+    @Switch(name = "Send message informing about a block", size = OptionSize.SINGLE)
+    //?} else {
+    /*@SerialEntry
+    *///?}
+    var blockSendingInfoMessage: Boolean = true
 
     //? if = 1.8.9 {
     @Info(
@@ -176,7 +192,7 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL), "${Co
                                     .name(Component.literal("Block Receiving Custom Chat Messages"))
                                     .option(
                                         Option.createBuilder<Boolean>()
-                                            .name(Component.literal("Case-Sensitive"))
+                                            .name(Component.literal("Case sensitive"))
                                             .binding(
                                                 defaults.blockReceivingCaseSensitive,
                                                 { config.blockReceivingCaseSensitive },
@@ -187,11 +203,23 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL), "${Co
                                     )
                                     .option(
                                         Option.createBuilder<Boolean>()
-                                            .name(Component.literal("Ignore Formatting"))
+                                            .name(Component.literal("Ignore formatting"))
                                             .binding(
                                                 defaults.blockReceivingIgnoreFormatting,
                                                 { config.blockReceivingIgnoreFormatting },
                                                 { config.blockReceivingIgnoreFormatting = it }
+                                            )
+                                            .controller(TickBoxControllerBuilder::create)
+                                            .build()
+                                    )
+                                    .option(
+                                        Option.createBuilder<Boolean>()
+                                            .name(Component.literal("Send info message"))
+                                            .description(OptionDescription.of(Component.literal("Send message informing about a block")))
+                                            .binding(
+                                                defaults.blockReceivingInfoMessage,
+                                                { config.blockReceivingInfoMessage },
+                                                { config.blockReceivingInfoMessage = it }
                                             )
                                             .controller(TickBoxControllerBuilder::create)
                                             .build()
@@ -217,11 +245,23 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL), "${Co
                                     .name(Component.literal("Block Sending Custom Chat Messages"))
                                     .option(
                                         Option.createBuilder<Boolean>()
-                                            .name(Component.literal("Case-Sensitive"))
+                                            .name(Component.literal("Case sensitive"))
                                             .binding(
                                                 defaults.blockSendingCaseSensitive,
                                                 { config.blockSendingCaseSensitive },
                                                 { config.blockSendingCaseSensitive = it }
+                                            )
+                                            .controller(TickBoxControllerBuilder::create)
+                                            .build()
+                                    )
+                                    .option(
+                                        Option.createBuilder<Boolean>()
+                                            .name(Component.literal("Send info message"))
+                                            .description(OptionDescription.of(Component.literal("Send message informing about a block")))
+                                            .binding(
+                                                defaults.blockSendingInfoMessage,
+                                                { config.blockSendingInfoMessage },
+                                                { config.blockSendingInfoMessage = it }
                                             )
                                             .controller(TickBoxControllerBuilder::create)
                                             .build()

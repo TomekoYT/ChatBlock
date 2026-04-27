@@ -1,17 +1,24 @@
 package tomeko.chatblock.chat
 
 //? if = 1.8.9 {
+import net.minecraft.util.ChatComponentText
+import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 //?} else {
 /*import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents
+import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 *///?}
+import net.minecraft.client.Minecraft
 import tomeko.chatblock.config.ChatBlockConfig
 
 object Chat {
+    private val RECEIVING = "receiving"
+    private val SENDING = "sending"
+
     //? if = 1.8.9 {
     val config get() = ChatBlockConfig
     //?} else {
@@ -25,7 +32,7 @@ object Chat {
 
     @JvmStatic
     fun allowSending(message: String): Boolean {
-        return !shouldBlock(message, config.messagesToBlockSending, config.blockSendingCaseSensitive)
+        return !shouldBlock(message, config.messagesToBlockSending, config.blockSendingCaseSensitive, config.blockSendingInfoMessage, SENDING)
     }
 
     @SubscribeEvent
@@ -45,7 +52,7 @@ object Chat {
     }
 
     fun allowSending(message: String): Boolean {
-        return !shouldBlock(message, config.messagesToBlockSending, config.blockSendingCaseSensitive)
+        return !shouldBlock(message, config.messagesToBlockSending, config.blockSendingCaseSensitive, config.blockSendingInfoMessage, SENDING)
     }
 
     private fun onChatReceive(messageText: Component?, fromActionBar: Boolean): Boolean {
@@ -64,7 +71,7 @@ object Chat {
             msg = msg.replace(Regex("§."), "")
         }
 
-        return !shouldBlock(msg, config.messagesToBlockReceiving, config.blockReceivingCaseSensitive)
+        return !shouldBlock(msg, config.messagesToBlockReceiving, config.blockReceivingCaseSensitive, config.blockReceivingInfoMessage, RECEIVING)
     }
 
     private fun shouldBlock(
@@ -74,7 +81,9 @@ object Chat {
         //?} else {
         /*messagesToBlock: MutableList<String>,
         *///?}
-        caseSensitive: Boolean
+        caseSensitive: Boolean,
+        sendInfoMessage: Boolean,
+        type: String
     ): Boolean {
         if (message.isEmpty()) return false
 
@@ -87,7 +96,20 @@ object Chat {
                 message.contains(messageToBlock, ignoreCase = true)
             }
 
-            if (matches) return true
+            if (matches)
+            {
+                if (sendInfoMessage) {
+                    val infoMessage = "Blocked $type message: $message, contains: $messageToBlock"
+                    //? if = 1.8.9 {
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${infoMessage}"))
+                    //?} else if >= 26.1 {
+                    /*Minecraft.getInstance().gui.chat.addClientSystemMessage(Component.literal(infoMessage).withStyle{it.withColor(ChatFormatting.RED)})
+                    *///?} else {
+                    /*Minecraft.getInstance().gui.chat.addMessage(Component.literal(infoMessage).withStyle{it.withColor(ChatFormatting.RED)})
+                    *///?}
+                }
+                return true
+            }
         }
 
         return false
