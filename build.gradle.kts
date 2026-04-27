@@ -19,6 +19,7 @@ plugins {
     id("gg.essential.loom") version "1.9.31"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("com.gradleup.shadow") version "9.4.1"
+    id("dev.deftu.gradle.bloom") version "0.2.0"
 }
 
 java {
@@ -87,6 +88,12 @@ dependencies {
     annotationProcessor("com.google.code.gson:gson:2.8.9")
 
     compileOnly("cc.polyfrost:oneconfig-$minecraft_version-forge:0.2.2-alpha+")
+}
+
+bloom {
+    replacement("@MOD_NAME@", mod_name)
+    replacement("@MOD_ID@", mod_id)
+    replacement("@MOD_VERSION@", mod_version)
 }
 
 tasks.withType(JavaCompile::class) {

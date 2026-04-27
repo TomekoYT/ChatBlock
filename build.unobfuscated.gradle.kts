@@ -18,6 +18,7 @@ val mod_menu_version: String by project
 plugins {
     id("net.fabricmc.fabric-loom") version "1.16-SNAPSHOT"
     id("org.jetbrains.kotlin.jvm") version "2.3.20"
+    id("dev.deftu.gradle.bloom") version "0.2.0"
 }
 
 base {
@@ -45,6 +46,12 @@ dependencies {
 
     implementation("dev.isxander:yet-another-config-lib:$yacl_version")
     implementation("com.terraformersmc:modmenu:$mod_menu_version")
+}
+
+bloom {
+    replacement("@MOD_NAME@", mod_name)
+    replacement("@MOD_ID@", mod_id)
+    replacement("@MOD_VERSION@", mod_version)
 }
 
 tasks.processResources {

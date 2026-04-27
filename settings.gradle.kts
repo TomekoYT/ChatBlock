@@ -14,6 +14,9 @@ pluginManagement {
 		maven("https://jitpack.io/")
 		maven("https://repo.spongepowered.org/maven/")
 		maven("https://repo.essential.gg/repository/maven-public")
+
+		maven("https://maven.deftu.dev/releases")
+		maven("https://maven.deftu.dev/snapshots")
 	}
 	resolutionStrategy {
 		eachPlugin {

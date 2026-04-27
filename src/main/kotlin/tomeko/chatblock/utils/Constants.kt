@@ -5,9 +5,9 @@ import cc.polyfrost.oneconfig.renderer.asset.SVG
 //?}
 
 object Constants {
-    const val MOD_NAME = "Chat Block"
-    const val MOD_ID = "chatblock"
-    const val MOD_VERSION = "1.1.0"
+    const val MOD_NAME = "@MOD_NAME@"
+    const val MOD_ID = "@MOD_ID@"
+    const val MOD_VERSION = "@MOD_VERSION@"
 
     //? if = 1.8.9 {
     val PLUS_ICON = SVG("/assets/chatblock/icons/plus.svg")
