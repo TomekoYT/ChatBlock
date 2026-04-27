@@ -1,27 +1,24 @@
 package tomeko.chatblock.gui
 
 //? if = 1.8.9 {
+import org.lwjgl.opengl.Display
 import net.minecraft.client.Minecraft
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
-class CloseInactiveConfigScreen {
-    @SubscribeEvent
-    fun onTick(event: TickEvent.ClientTickEvent) {
-        if (org.lwjgl.opengl.Display.isActive()) return
+object CloseInactiveConfigScreen {
+    private val mc = Minecraft.getMinecraft()
 
-        val screen = Minecraft.getMinecraft().currentScreen ?: return
-
-        if (screen::class.java.name.contains("oneconfig")) {
-            Minecraft.getMinecraft().displayGuiScreen(null)
-        }
+    fun register() {
+        MinecraftForge.EVENT_BUS.register(CloseInactiveConfigScreen)
     }
 
-    companion object {
-        fun register() {
-            MinecraftForge.EVENT_BUS.register(CloseInactiveConfigScreen())
-        }
+    @SubscribeEvent
+    fun onTick(event: TickEvent.ClientTickEvent) {
+        if (Display.isActive() || mc.currentScreen == null || !mc.currentScreen::class.java.name.contains("oneconfig")) return
+
+        mc.displayGuiScreen(null)
     }
 }
 //?}
