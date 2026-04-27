@@ -13,6 +13,6 @@
     "credits": "",
     "logoFile": "assets/chatblock/icon.png",
     "screenshots": [],
-    "dependencies": []
+    "dependencies": ["oneconfig"]
   }
 ]

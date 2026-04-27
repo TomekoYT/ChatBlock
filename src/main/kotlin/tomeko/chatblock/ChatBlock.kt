@@ -13,7 +13,7 @@ import tomeko.chatblock.config.ChatBlockConfig
 import tomeko.chatblock.utils.Constants
 
 //? if = 1.8.9 {
-@Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, version = Constants.MOD_VERSION, modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter")
+@Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, version = Constants.MOD_VERSION, modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter", dependencies = "required-after:oneconfig")
 object ChatBlock {
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent) {
