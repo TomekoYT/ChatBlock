@@ -87,7 +87,7 @@ java {
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_25
+        jvmTarget = JvmTarget.fromTarget(java_version)
     }
 }
 

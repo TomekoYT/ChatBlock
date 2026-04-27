@@ -1,0 +1,24 @@
+package tomeko.chatblock.element
+
+//? if = 1.8.9 {
+import cc.polyfrost.oneconfig.gui.elements.text.TextInputField
+import cc.polyfrost.oneconfig.utils.InputHandler
+
+class TextField(
+    private val getMessage: () -> String,
+    private val setMessage: (String) -> Unit
+) : TextInputField(608, 32, "", false, false, null) {
+
+    override fun draw(vg: Long, x: Float, y: Float, inputHandler: InputHandler) {
+        input = getMessage()
+        super.draw(vg, x, y, inputHandler)
+    }
+
+    fun isKeyTyped(key: Char, keyCode: Int): Boolean {
+        if (!isToggled) return false
+        keyTyped(key, keyCode)
+        setMessage(input)
+        return true
+    }
+}
+//?}
