@@ -29,7 +29,7 @@ import net.minecraft.network.chat.Component
 import tomeko.chatblock.utils.Constants
 
 //? if = 1.8.9 {
-object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL), "${Constants.MOD_ID}.json") {
+object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/assets/${Constants.MOD_ID}/icon.png"), "${Constants.MOD_ID}.json") {
 //?} else {
 /*class ChatBlockConfig {
     *///?}
