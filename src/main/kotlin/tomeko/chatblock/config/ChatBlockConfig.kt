@@ -97,7 +97,7 @@ object ChatBlockConfig : Config(
     //?} else {
     /*@SerialEntry
     *///?}
-    var blockSendingSimilarity: Float = 100f
+    var blockSendingSimilarity: Int = 100
 
     //? if = 1.8.9 {
     @JvmField
@@ -259,7 +259,7 @@ object ChatBlockConfig : Config(
                                 OptionGroup.createBuilder()
                                     .name(Component.literal("Block Sending Custom Words"))
                                     .option(
-                                        Option.createBuilder<Float>()
+                                        Option.createBuilder<Int>()
                                             .name(Component.literal("Similarity"))
                                             .binding(
                                                 defaults.blockSendingSimilarity,
@@ -267,12 +267,12 @@ object ChatBlockConfig : Config(
                                                 { config.blockSendingSimilarity = it }
                                             )
                                             .controller { opt ->
-                                                FloatSliderControllerBuilder.create(opt)
+                                                IntegerSliderControllerBuilder.create(opt)
                                                     .formatValue { value ->
                                                         Component.literal("$value%")
                                                     }
-                                                    .range(1f, 100f)
-                                                    .step(1f)
+                                                    .range(1, 100)
+                                                    .step(1)
                                             }
                                             .build()
                                     )
