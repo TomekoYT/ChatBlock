@@ -11,10 +11,20 @@
 </a>
 
 # Chat Block
+
 Multiversion mod that adds a filter list to block/hide sending and receiving custom spam chat messages
 
 ## Features
 
 ### Chat
-- Block receiving custom chat messages
-- Block sending custom chat messages
+
+#### Block receiving custom messages
+
+- on/off case-sensitive
+- on/off ignore formatting
+- message informing about a block
+
+#### Block sending custom words
+
+- set words similarity in %
+- message informing about a block
