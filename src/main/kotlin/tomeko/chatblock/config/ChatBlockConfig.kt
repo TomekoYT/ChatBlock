@@ -46,7 +46,7 @@ object ChatBlockConfig : Config(
 
     //? if = 1.8.9 {
     @JvmField
-    @Switch(name = "Case sensitive", size = OptionSize.SINGLE)
+    @Switch(name = "Case-sensitive", size = OptionSize.SINGLE)
     //?} else {
     /*@SerialEntry
     *///?}
@@ -207,7 +207,7 @@ object ChatBlockConfig : Config(
                                     .name(Component.literal("Block Receiving Custom Messages"))
                                     .option(
                                         Option.createBuilder<Boolean>()
-                                            .name(Component.literal("Case sensitive"))
+                                            .name(Component.literal("Case-sensitive"))
                                             .binding(
                                                 defaults.blockReceivingCaseSensitive,
                                                 { config.blockReceivingCaseSensitive },
