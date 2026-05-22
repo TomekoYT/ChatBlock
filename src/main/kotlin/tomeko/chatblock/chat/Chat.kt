@@ -14,11 +14,9 @@ import net.minecraft.network.chat.Component
 *///?}
 import net.minecraft.client.Minecraft
 import tomeko.chatblock.config.ChatBlockConfig
+import kotlin.math.*
 
 object Chat {
-    private val RECEIVING = "receiving"
-    private val SENDING = "sending"
-
     //? if = 1.8.9 {
     val config get() = ChatBlockConfig
     //?} else {
@@ -30,19 +28,13 @@ object Chat {
         MinecraftForge.EVENT_BUS.register(Chat)
     }
 
-    @JvmStatic
-    fun allowSending(message: String): Boolean {
-        return !shouldBlock(message, config.messagesToBlockSending, config.blockSendingCaseSensitive, config.blockSendingInfoMessage, SENDING)
-    }
-
     @SubscribeEvent
     fun onChatReceive(event: ClientChatReceivedEvent) {
         if (event.type.toInt() == 2 || event.message == null) {
             return
         }
 
-        var message = event.message.getUnformattedText()
-        if (!allowReceiving(message)) event.setCanceled(true)
+        if (!allowReceiving(event.message.unformattedText)) event.setCanceled(true)
     }
     //?} else {
     /*fun register() {
@@ -51,67 +43,92 @@ object Chat {
         ClientSendMessageEvents.ALLOW_COMMAND.register(::allowSending)
     }
 
-    fun allowSending(message: String): Boolean {
-        return !shouldBlock(message, config.messagesToBlockSending, config.blockSendingCaseSensitive, config.blockSendingInfoMessage, SENDING)
-    }
-
-    private fun onChatReceive(messageText: Component?, fromActionBar: Boolean): Boolean {
-        if (fromActionBar || messageText == null) {
+    private fun onChatReceive(message: Component?, fromActionBar: Boolean): Boolean {
+        if (fromActionBar || message == null) {
             return true
         }
 
-        var message = messageText.string
-        return allowReceiving(message)
+        return allowReceiving(message.string)
     }
     *///?}
 
-    private fun allowReceiving(message: String): Boolean {
-        var msg = message
-        if (config.blockReceivingIgnoreFormatting) {
-            msg = msg.replace(Regex("§."), "")
-        }
+    private fun allowReceiving(msg: String): Boolean {
+        if (msg.isEmpty()) return true
 
-        return !shouldBlock(msg, config.messagesToBlockReceiving, config.blockReceivingCaseSensitive, config.blockReceivingInfoMessage, RECEIVING)
-    }
+        val message = if (config.blockReceivingIgnoreFormatting) msg.replace(Regex("§."), "") else msg
 
-    private fun shouldBlock(
-        message: String,
-        //? if = 1.8.9 {
-        messagesToBlock: Array<String>,
-        //?} else {
-        /*messagesToBlock: MutableList<String>,
-        *///?}
-        caseSensitive: Boolean,
-        sendInfoMessage: Boolean,
-        type: String
-    ): Boolean {
-        if (message.isEmpty()) return false
-
-        for (messageToBlock in messagesToBlock) {
+        for (messageToBlock in config.messagesToBlockReceiving) {
             if (messageToBlock.isEmpty()) continue
 
-            val matches = if (caseSensitive) {
-                message.contains(messageToBlock)
-            } else {
-                message.contains(messageToBlock, ignoreCase = true)
-            }
+            val matches =
+                if (config.blockReceivingCaseSensitive)
+                    message.contains(messageToBlock)
+                else
+                    message.contains(messageToBlock, ignoreCase = true)
 
-            if (matches)
-            {
-                if (sendInfoMessage) {
-                    val infoMessage = "Blocked $type message: $message, contains: $messageToBlock"
-                    //? if = 1.8.9 {
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${infoMessage}"))
-                    //?} else if >= 26.1 {
-                    /*Minecraft.getInstance().gui.chat.addClientSystemMessage(Component.literal(infoMessage).withStyle{it.withColor(ChatFormatting.RED)})
-                    *///?} else {
-                    /*Minecraft.getInstance().gui.chat.addMessage(Component.literal(infoMessage).withStyle{it.withColor(ChatFormatting.RED)})
-                    *///?}
+            if (matches) {
+                if (config.blockReceivingInfoMessage) {
+                    sendClientMessage("Blocked receiving message: $message, contains: $messageToBlock")
                 }
-                return true
+                return false
             }
         }
 
-        return false
+        return true
+    }
+
+    @JvmStatic
+    fun allowSending(message: String): Boolean {
+        if (message.isEmpty()) return true
+
+        for (wordToBlock in config.wordsToBlockSending) {
+            if (wordToBlock.isEmpty()) continue
+
+            val wordsInMessage = message.split(" ")
+
+            for (word in wordsInMessage) {
+                val similar = 100 * similarity(word, wordToBlock)
+                if (similar >= config.blockSendingSimilarity) {
+                    if (config.blockSendingInfoMessage) {
+                        sendClientMessage(
+                            "Blocked sending message: $message, matched: $word with $wordToBlock (${
+                                round(
+                                    10 * similar
+                                ) / 10
+                            }% similarity)"
+                        )
+                    }
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+
+    private fun similarity(a: String, b: String): Float {
+        val dp = Array(a.length + 1) { Array(b.length + 1) { 0 } }
+        for (i in 0..a.length) dp[i][0] = i
+        for (j in 0..b.length) dp[0][j] = j
+
+        for (i in 1..a.length) {
+            for (j in 1..b.length) {
+                val cost = if (a[i - 1].lowercaseChar() == b[j - 1].lowercaseChar()) 0 else 1
+
+                dp[i][j] = min(min(dp[i - 1][j] + 1, dp[i][j - 1] + 1), dp[i - 1][j - 1] + cost)
+            }
+        }
+
+        return 1.0f - dp[a.length][b.length].toFloat() / max(a.length, b.length).toFloat()
+    }
+
+    private fun sendClientMessage(message: String) {
+        //? if = 1.8.9 {
+        Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${message}"))
+        //?} else if >= 26.1 {
+        /*Minecraft.getInstance().gui.chat.addClientSystemMessage(Component.literal(message).withStyle{it.withColor(ChatFormatting.RED)})
+        *///?} else {
+        /*Minecraft.getInstance().gui.chat.addMessage(Component.literal(message).withStyle{it.withColor(ChatFormatting.RED)})
+        *///?}
     }
 }

@@ -3,7 +3,9 @@ package tomeko.chatblock.config
 //? if = 1.8.9 {
 import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.CustomOption
+import cc.polyfrost.oneconfig.config.annotations.Header
 import cc.polyfrost.oneconfig.config.annotations.Info
+import cc.polyfrost.oneconfig.config.annotations.Slider
 import cc.polyfrost.oneconfig.config.annotations.Switch
 import cc.polyfrost.oneconfig.config.core.ConfigUtils
 import cc.polyfrost.oneconfig.config.data.InfoType
@@ -29,10 +31,18 @@ import net.minecraft.network.chat.Component
 import tomeko.chatblock.utils.Constants
 
 //? if = 1.8.9 {
-object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/assets/${Constants.MOD_ID}/icon.png"), "${Constants.MOD_ID}.json") {
+object ChatBlockConfig : Config(
+    Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/assets/${Constants.MOD_ID}/icon.png"),
+    "${Constants.MOD_ID}.json"
+) {
 //?} else {
 /*class ChatBlockConfig {
     *///?}
+
+    //? if = 1.8.9 {
+    @Header(text = "Block receiving custom messages")
+    private var receivingHeader = null
+    //?}
 
     //? if = 1.8.9 {
     @JvmField
@@ -60,11 +70,11 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
 
     //? if = 1.8.9 {
     @Info(
-        text = "Block receiving following chat messages:",
+        text = "Block receiving following messages:",
         type = InfoType.INFO,
         size = 2
     )
-    private var hideInfo = Runnable { }
+    private var receivingInfo = null
     //?}
 
     //? if = 1.8.9 {
@@ -77,12 +87,17 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
     *///?}
 
     //? if = 1.8.9 {
+    @Header(text = "Block sending custom words")
+    private var sendingHeader = null
+    //?}
+
+    //? if = 1.8.9 {
     @JvmField
-    @Switch(name = "Case sensitive", size = OptionSize.SINGLE)
+    @Slider(name = "Similarity", min = 1f, max = 100f, step = 1)
     //?} else {
     /*@SerialEntry
     *///?}
-    var blockSendingCaseSensitive: Boolean = false
+    var blockSendingSimilarity: Float = 100f
 
     //? if = 1.8.9 {
     @JvmField
@@ -94,20 +109,20 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
 
     //? if = 1.8.9 {
     @Info(
-        text = "Block sending following chat messages:",
+        text = "Block sending following words:",
         type = InfoType.INFO,
         size = 2
     )
-    private var blockInfo = Runnable { }
+    private var sendingInfo = null
     //?}
 
     //? if = 1.8.9 {
     @JvmField
     @CustomOption(id = "blockSending")
-    var messagesToBlockSending: Array<String> = emptyArray()
+    var wordsToBlockSending: Array<String> = emptyArray()
     //?} else {
     /*@SerialEntry
-    var messagesToBlockSending: MutableList<String> = mutableListOf()
+    var wordsToBlockSending: MutableList<String> = mutableListOf()
     *///?}
 
     //? if = 1.8.9 {
@@ -148,7 +163,7 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
 
         BlockSendingListOption.apply {
             items.clear()
-            items.addAll(messagesToBlockSending.map { message ->
+            items.addAll(wordsToBlockSending.map { message ->
                 WrappedBlock(message) {
                     willBeRemoved = it
                 }
@@ -161,7 +176,7 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
             .map { it.message }
             .toTypedArray()
 
-        messagesToBlockSending = BlockSendingListOption.items
+        wordsToBlockSending = BlockSendingListOption.items
             .map { it.message }
             .toTypedArray()
 
@@ -189,7 +204,7 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
 
                             .group(
                                 OptionGroup.createBuilder()
-                                    .name(Component.literal("Block Receiving Custom Chat Messages"))
+                                    .name(Component.literal("Block Receiving Custom Messages"))
                                     .option(
                                         Option.createBuilder<Boolean>()
                                             .name(Component.literal("Case sensitive"))
@@ -229,7 +244,7 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
 
                             .group(
                                 ListOption.createBuilder<String>()
-                                    .name(Component.literal("Block receiving following chat messages:"))
+                                    .name(Component.literal("Block receiving following messages:"))
                                     .binding(
                                         defaults.messagesToBlockReceiving,
                                         { config.messagesToBlockReceiving },
@@ -242,16 +257,23 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
 
                             .group(
                                 OptionGroup.createBuilder()
-                                    .name(Component.literal("Block Sending Custom Chat Messages"))
+                                    .name(Component.literal("Block Sending Custom Words"))
                                     .option(
-                                        Option.createBuilder<Boolean>()
-                                            .name(Component.literal("Case sensitive"))
+                                        Option.createBuilder<Float>()
+                                            .name(Component.literal("Similarity"))
                                             .binding(
-                                                defaults.blockSendingCaseSensitive,
-                                                { config.blockSendingCaseSensitive },
-                                                { config.blockSendingCaseSensitive = it }
+                                                defaults.blockSendingSimilarity,
+                                                { config.blockSendingSimilarity },
+                                                { config.blockSendingSimilarity = it }
                                             )
-                                            .controller(TickBoxControllerBuilder::create)
+                                            .controller { opt ->
+                                                FloatSliderControllerBuilder.create(opt)
+                                                    .formatValue { value ->
+                                                        Component.literal("$value%")
+                                                    }
+                                                    .range(1f, 100f)
+                                                    .step(1f)
+                                            }
                                             .build()
                                     )
                                     .option(
@@ -271,11 +293,11 @@ object ChatBlockConfig : Config(Mod(Constants.MOD_NAME, ModType.UTIL_QOL, "/asse
 
                             .group(
                                 ListOption.createBuilder<String>()
-                                    .name(Component.literal("Block sending following chat messages:"))
+                                    .name(Component.literal("Block sending following words:"))
                                     .binding(
-                                        defaults.messagesToBlockSending,
-                                        { config.messagesToBlockSending },
-                                        { config.messagesToBlockSending = it.toMutableList() }
+                                        defaults.wordsToBlockSending,
+                                        { config.wordsToBlockSending },
+                                        { config.wordsToBlockSending = it.toMutableList() }
                                     )
                                     .controller(StringControllerBuilder::create)
                                     .initial("")
