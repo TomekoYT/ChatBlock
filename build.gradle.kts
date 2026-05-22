@@ -88,6 +88,7 @@ dependencies {
     annotationProcessor("com.google.code.gson:gson:2.8.9")
 
     compileOnly("cc.polyfrost:oneconfig-$minecraft_version-forge:0.2.2-alpha+")
+    shadowImpl("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+")
 }
 
 bloom {
@@ -159,7 +160,6 @@ tasks.shadowJar {
     configurations = listOf(shadowImpl)
 
     fun relocate(name: String) = relocate(name, "$base_group.deps.$name")
-    relocate("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+")
 }
 
 tasks.assemble.get().dependsOn(tasks.remapJar)
