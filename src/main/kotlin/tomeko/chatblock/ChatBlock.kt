@@ -4,7 +4,7 @@ package tomeko.chatblock
 import cc.polyfrost.oneconfig.events.EventManager
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
-import tomeko.chatblock.gui.CloseInactiveConfigScreen
+import tomeko.chatblock.config.CloseInactiveConfigScreen
 //?} else {
 /*import net.fabricmc.api.ClientModInitializer
 *///?}
