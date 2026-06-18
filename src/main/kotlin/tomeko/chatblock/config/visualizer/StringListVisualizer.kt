@@ -15,11 +15,12 @@ import tomeko.chatblock.config.ChatBlockConfig
 class StringListVisualizer : Visualizer {
     @Composable
     override fun visualize(prop: Property<*>) {
+        val delimiter = if (prop.id == "wordsToBlockSendingStringList") " " else "\n"
         val rawValue = prop.get()
 
         val initialList = remember(rawValue) {
             when (rawValue) {
-                is String -> rawValue.split("\n").filter { it.isNotBlank() }
+                is String -> rawValue.split(delimiter).filter { it.isNotBlank() }
                 is Array<*> -> rawValue.mapNotNull { it?.toString() }
                 is List<*> -> rawValue.mapNotNull { it?.toString() }
                 else -> emptyList()
@@ -35,7 +36,7 @@ class StringListVisualizer : Visualizer {
 
         fun updateProperty(newItems: List<String>) {
             items = newItems
-            val joinedString = newItems.joinToString("\n")
+            val joinedString = newItems.joinToString(delimiter)
 
             @Suppress("UNCHECKED_CAST")
             (prop as Property<Any>).set(joinedString)
@@ -76,10 +77,11 @@ class StringListVisualizer : Visualizer {
                     Text("+", color = Color.White)
                 }
 
+                val placeHolderText = "Type to add new " + (if (prop.id == "wordsToBlockSendingStringList") "word" else "message") + "..."
                 OutlinedTextField(
                     value = newItemText,
                     onValueChange = { newItemText = it },
-                    placeholder = { Text("Type to add new item...", color = Color.Gray) },
+                    placeholder = { Text(placeHolderText, color = Color.Gray) },
                     singleLine = true,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = Color.White,
