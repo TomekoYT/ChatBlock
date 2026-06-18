@@ -33,6 +33,7 @@ object ChatBlockConfig : Config(
         /*initialize()
         *///?} else {
         preload()
+        clearPropertyLabels()
         //?}
     }
 
@@ -227,5 +228,83 @@ object ChatBlockConfig : Config(
 
         super.save()
     }
-    *///?}
+    *///?} else {
+    private fun clearPropertyLabels() {
+        try {
+            var clazz: Class<*>? = this.javaClass
+            while (clazz != null) {
+                for (field in clazz.declaredFields) {
+                    runCatching {
+                        field.isAccessible = true
+                        val value = field.get(this)
+                        if (value != null) scanAndClean(value)
+                    }
+                }
+                clazz = clazz.superclass
+            }
+        } catch (e: Throwable) {}
+    }
+
+    private fun scanAndClean(obj: Any) {
+        val objClass = obj.javaClass
+        val name = objClass.name
+
+        if (obj is Map<*, *>) {
+            obj.values.forEach { if (it != null) scanAndClean(it) }
+            return
+        }
+        if (obj is Collection<*>) {
+            obj.forEach { if (it != null) scanAndClean(it) }
+            return
+        }
+
+        if (name.contains("polyfrost")) {
+            runCatching {
+                var c: Class<*>? = objClass
+                var isTarget = false
+                while (c != null) {
+                    try {
+                        val idField = c.getDeclaredField("id")
+                        idField.isAccessible = true
+                        val id = idField.get(obj)?.toString()
+                        if (id == "messagesToBlockReceivingStringList" || id == "wordsToBlockSendingStringList") {
+                            isTarget = true
+                            break
+                        }
+                    } catch (e: Exception) {}
+                    c = c.superclass
+                }
+
+                if (isTarget) {
+                    var currentClass: Class<*>? = objClass
+                    while (currentClass != null) {
+                        for (fieldName in listOf("title", "name", "label", "description")) {
+                            try {
+                                val f = currentClass.getDeclaredField(fieldName)
+                                f.isAccessible = true
+                                f.set(obj, "")
+                            } catch (e: Exception) {}
+                        }
+                        currentClass = currentClass.superclass
+                    }
+                }
+
+                var scanClass: Class<*>? = objClass
+                while (scanClass != null) {
+                    for (field in scanClass.declaredFields) {
+                        if (java.lang.reflect.Modifier.isStatic(field.modifiers)) continue
+                        try {
+                            field.isAccessible = true
+                            val fieldVal = field.get(obj)
+                            if (fieldVal != null && fieldVal !== obj && !field.type.isPrimitive) {
+                                scanAndClean(fieldVal)
+                            }
+                        } catch (e: Exception) {}
+                    }
+                    scanClass = scanClass.superclass
+                }
+            }
+        }
+    }
+    //?}
 }

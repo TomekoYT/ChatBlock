@@ -7,15 +7,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.polyfrost.oneconfig.api.config.v1.Property
 import org.polyfrost.oneconfig.api.config.v1.Visualizer
 import tomeko.chatblock.config.ChatBlockConfig
 
 class StringListVisualizer : Visualizer {
-
     @Composable
     override fun visualize(prop: Property<*>) {
         val rawValue = prop.get()
@@ -47,16 +44,6 @@ class StringListVisualizer : Visualizer {
         }
 
         Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-
-            val headerLabel = if (prop.id == "messagesToBlockReceiving") "Messages to Block" else "Words to Block"
-            Text(
-                text = headerLabel,
-                color = Color.White,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
             for (item in items) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
