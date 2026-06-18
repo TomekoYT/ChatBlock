@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 /*import net.fabricmc.api.ClientModInitializer
 *///?}
 import tomeko.chatblock.chat.*
+import tomeko.chatblock.commands.*
 import tomeko.chatblock.config.*
 import tomeko.chatblock.utils.*
 
@@ -39,6 +40,8 @@ class ChatBlock
         //?}
 
         Chat.register()
+
+        ChatBlockCommand.register()
 
         ChatBlockConfig.register()
     }
