@@ -1,155 +1,178 @@
 package tomeko.chatblock.config
 
 //? if = 1.8.9 {
-import cc.polyfrost.oneconfig.config.Config
+/*import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.*
 import cc.polyfrost.oneconfig.config.core.ConfigUtils
 import cc.polyfrost.oneconfig.config.data.*
 import cc.polyfrost.oneconfig.config.elements.*
 import tomeko.chatblock.element.*
 import java.lang.reflect.Field
-//?} else {
-/*import org.polyfrost.oneconfig.api.config.v1.Config
+*///?} else {
+import org.polyfrost.oneconfig.api.config.v1.Config
 import org.polyfrost.oneconfig.api.config.v1.annotations.*
-*///?}
+import tomeko.chatblock.config.annotations.StringList
+//?}
 import tomeko.chatblock.utils.Constants
 
 object ChatBlockConfig : Config(
     //? if = 1.8.9 {
-    Mod(Constants.MOD_NAME,
+    /*Mod(Constants.MOD_NAME,
     ModType.UTIL_QOL,
     "/assets/${Constants.MOD_ID}/icon.png"),
     "${Constants.MOD_ID}.json"
-    //?} else {
-    /*"${Constants.MOD_ID}.json",
+    *///?} else {
+    "${Constants.MOD_ID}.json",
     "/assets/${Constants.MOD_ID}/icon.png",
     Constants.MOD_NAME,
     Category.QOL
-    *///?}
+    //?}
 ) {
     fun register() {
         //? if = 1.8.9 {
-        initialize()
-        //?} else {
-        /*save()
-        *///?}
+        /*initialize()
+        *///?} else {
+        preload()
+        //?}
     }
 
     @Info(
         //? if = 1.8.9 {
-        text = "Block Receiving Custom Messages",
+        /*text = "Block Receiving Custom Messages",
         type = InfoType.INFO,
         size = 2
-        //?} else {
-        /*description = "Block Receiving Custom Messages",
-        *///?}
+        *///?} else {
+        description = "Block Receiving Custom Messages",
+        //?}
     )
     private var receivingTitle = null
 
     @Switch(
         //? if = 1.8.9 {
-        name
-        //?} else {
-        /*title
-            *///?}
+        /*name
+        *///?} else {
+        title
+            //?}
         = "Case-sensitive"
     )
     var blockReceivingCaseSensitive: Boolean = false
 
     @Switch(
         //? if = 1.8.9 {
-        name
-        //?} else {
-        /*title
-            *///?}
+        /*name
+        *///?} else {
+        title
+            //?}
         = "Ignore formatting"
     )
     var blockReceivingIgnoreFormatting: Boolean = true
 
     @Switch(
         //? if = 1.8.9 {
-        name
-        //?} else {
-        /*title
-            *///?}
+        /*name
+        *///?} else {
+        title
+            //?}
         = "Send message informing about a block"
     )
     var blockReceivingInfoMessage: Boolean = false
 
     @Info(
         //? if = 1.8.9 {
-        text = "Block receiving following messages:",
+        /*text = "Block receiving following messages:",
         type = InfoType.INFO,
         size = 2
-        //?} else {
-        /*description = "Block receiving following messages:",
-        *///?}
+        *///?} else {
+        description = "Block receiving following messages:",
+        //?}
     )
     private var receivingInfo = null
 
-    //? if = 1.8.9 {
-    @CustomOption(id = "blockReceiving")
+    //? if >= 26.1 {
+    @Include
+    @StringList(title = "")
+    var messagesToBlockReceivingStringList: String = ""
     //?}
-    var messagesToBlockReceiving: Array<String> = emptyArray()
+
+    //? if = 1.8.9 {
+    //@CustomOption(id = "blockSending")
+    //?}
+    var messagesToBlockReceiving: Array<String> =
+    //? if = 1.8.9 {
+    //emptyArray()
+        //?} else {
+        messagesToBlockReceivingStringList.split("\n").filter { it.isNotBlank() }.toTypedArray()
+    //?}
 
 
     @Info(
         //? if = 1.8.9 {
-        text = "Block Sending Custom Words",
+        /*text = "Block Sending Custom Words",
         type = InfoType.INFO,
         size = 2
-        //?} else {
-        /*description = "Block Sending Custom Words",
-        *///?}
+        *///?} else {
+        description = "Block Sending Custom Words",
+        //?}
     )
     private var sendingTitle = null
 
     @Slider(
         //? if = 1.8.9 {
-        name
-        //?} else {
-        /*title
-            *///?}
+        /*name
+        *///?} else {
+        title
+            //?}
         = "Similarity",
         min = 1f,
         max = 100f,
         step =
             //? if = 1.8.9 {
-            1
-            //?} else {
-            /*1f
-            *///?}
+            /*1
+            *///?} else {
+            1f
+        //?}
     )
     var blockSendingSimilarity: Int = 100
 
     @Switch(
         //? if = 1.8.9 {
-        name
-        //?} else {
-        /*title
-            *///?}
+        /*name
+        *///?} else {
+        title
+            //?}
         = "Send message informing about a block"
     )
     var blockSendingInfoMessage: Boolean = true
 
     @Info(
         //? if = 1.8.9 {
-        text = "Block sending following words:",
+        /*text = "Block sending following words:",
         type = InfoType.INFO,
         size = 2
-        //?} else {
-        /*description = "Block sending following words:",
-        *///?}
+        *///?} else {
+        description = "Block sending following words:",
+        //?}
     )
     private var sendingInfo = null
 
-    //? if = 1.8.9 {
-    @CustomOption(id = "blockSending")
+    //? if >= 26.1 {
+    @Include
+    @StringList(title = "")
+    var wordsToBlockSendingStringList: String = ""
     //?}
-    var wordsToBlockSending: Array<String> = emptyArray()
 
     //? if = 1.8.9 {
-    override fun getCustomOption(
+    //@CustomOption(id = "blockSending")
+    //?}
+    var wordsToBlockSending: Array<String> =
+    //? if = 1.8.9 {
+    //emptyArray()
+        //?} else {
+        wordsToBlockSendingStringList.split("\n").filter { it.isNotBlank() }.toTypedArray()
+    //?}
+
+    //? if = 1.8.9 {
+    /*override fun getCustomOption(
         field: Field,
         annotation: CustomOption,
         page: OptionPage,
@@ -204,5 +227,5 @@ object ChatBlockConfig : Config(
 
         super.save()
     }
-    //?}
+    *///?}
 }

@@ -1,7 +1,7 @@
 package tomeko.chatblock.element
 
 //? if = 1.8.9 {
-import cc.polyfrost.oneconfig.gui.elements.text.TextInputField
+/*import cc.polyfrost.oneconfig.gui.elements.text.TextInputField
 import cc.polyfrost.oneconfig.utils.InputHandler
 
 class TextField(
@@ -21,4 +21,4 @@ class TextField(
         return true
     }
 }
-//?}
+*///?}

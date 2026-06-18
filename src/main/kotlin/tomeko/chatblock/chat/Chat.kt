@@ -1,24 +1,24 @@
 package tomeko.chatblock.chat
 
 //? if = 1.8.9 {
-import net.minecraft.util.ChatComponentText
+/*import net.minecraft.util.ChatComponentText
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-//?} else {
-/*import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
+*///?} else {
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
-*///?}
+//?}
 import net.minecraft.client.Minecraft
 import tomeko.chatblock.config.ChatBlockConfig
 import kotlin.math.*
 
 object Chat {
     //? if = 1.8.9 {
-    fun register() {
+    /*fun register() {
         MinecraftForge.EVENT_BUS.register(Chat)
     }
 
@@ -30,8 +30,8 @@ object Chat {
 
         if (!allowReceiving(event.message.unformattedText)) event.setCanceled(true)
     }
-    //?} else {
-    /*fun register() {
+    *///?} else {
+    fun register() {
         ClientReceiveMessageEvents.ALLOW_GAME.register(::onChatReceive)
         ClientSendMessageEvents.ALLOW_CHAT.register(::allowSending)
         ClientSendMessageEvents.ALLOW_COMMAND.register(::allowSending)
@@ -44,7 +44,7 @@ object Chat {
 
         return allowReceiving(message.string)
     }
-    *///?}
+    //?}
 
     private fun allowReceiving(msg: String): Boolean {
         if (msg.isEmpty()) return true
@@ -118,9 +118,9 @@ object Chat {
 
     private fun sendClientMessage(message: String) {
         //? if = 1.8.9 {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${message}"))
-        //?} else {
-        /*Minecraft.getInstance().gui.chat.addClientSystemMessage(Component.literal(message).withStyle{it.withColor(ChatFormatting.RED)})
-        *///?}
+        /*Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${message}"))
+        *///?} else {
+        Minecraft.getInstance().gui.chat.addClientSystemMessage(Component.literal(message).withStyle{it.withColor(ChatFormatting.RED)})
+        //?}
     }
 }

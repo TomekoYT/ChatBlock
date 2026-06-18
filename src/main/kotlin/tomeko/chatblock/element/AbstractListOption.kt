@@ -1,7 +1,7 @@
 package tomeko.chatblock.element
 
 //? if = 1.8.9 {
-import cc.polyfrost.oneconfig.config.elements.BasicOption
+/*import cc.polyfrost.oneconfig.config.elements.BasicOption
 import cc.polyfrost.oneconfig.gui.elements.BasicButton
 import cc.polyfrost.oneconfig.gui.elements.IFocusable
 import cc.polyfrost.oneconfig.utils.InputHandler
@@ -60,4 +60,4 @@ abstract class AbstractListOption<T> :
     protected abstract fun keyTypedItem(item: T, key: Char, keyCode: Int): Boolean
     protected abstract fun hasFocusItem(item: T): Boolean
 }
-//?}
+*///?}

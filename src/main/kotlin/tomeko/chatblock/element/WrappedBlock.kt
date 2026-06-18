@@ -1,7 +1,7 @@
 package tomeko.chatblock.element
 
 //? if = 1.8.9 {
-import cc.polyfrost.oneconfig.gui.elements.BasicButton
+/*import cc.polyfrost.oneconfig.gui.elements.BasicButton
 import cc.polyfrost.oneconfig.utils.InputHandler
 import cc.polyfrost.oneconfig.utils.color.ColorPalette
 import tomeko.chatblock.utils.Constants
@@ -39,4 +39,4 @@ class WrappedBlock(
     fun hasFocus() =
         textField.isToggled
 }
-//?}
+*///?}

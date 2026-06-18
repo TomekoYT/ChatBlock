@@ -1,7 +1,7 @@
 package tomeko.chatblock.mixins;
 
 //? if = 1.8.9 {
-import net.minecraft.client.gui.GuiScreen;
+/*import net.minecraft.client.gui.GuiScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,4 +17,4 @@ public class GuiScreenMixin {
         }
     }
 }
-//?}
+*///?}

@@ -1,7 +1,7 @@
 package tomeko.chatblock.element
 
 //? if = 1.8.9 {
-import cc.polyfrost.oneconfig.utils.InputHandler
+/*import cc.polyfrost.oneconfig.utils.InputHandler
 
 object BlockReceivingListOption : AbstractListOption<WrappedBlock>() {
     override fun createWrapped() =
@@ -19,4 +19,4 @@ object BlockReceivingListOption : AbstractListOption<WrappedBlock>() {
     override fun hasFocusItem(item: WrappedBlock) =
         item.hasFocus()
 }
-//?}
+*///?}
