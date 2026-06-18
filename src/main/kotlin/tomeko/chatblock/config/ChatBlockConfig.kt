@@ -27,6 +27,14 @@ object ChatBlockConfig : Config(
     Category.QOL
     *///?}
 ) {
+    fun register() {
+        //? if = 1.8.9 {
+        initialize()
+        //?} else {
+        /*save()
+        *///?}
+    }
+
     @Info(
         //? if = 1.8.9 {
         text = "Block Receiving Custom Messages",
