@@ -1,7 +1,11 @@
-package tomeko.chatblock.init;
+package tomeko.chatblock.utils;
 
 //? if = 1.8.9 {
 import org.spongepowered.asm.lib.tree.ClassNode;
+//?} else {
+/*import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+import org.objectweb.asm.tree.ClassNode;
+*///?}
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
@@ -19,10 +23,10 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class AutoDiscoveryMixinPlugin implements IMixinConfigPlugin {
-    private static final List<AutoDiscoveryMixinPlugin> mixinPlugins = new ArrayList<>();
+public class MixinPlugin implements IMixinConfigPlugin {
+    private static final List<MixinPlugin> mixinPlugins = new ArrayList<>();
 
-    public static List<AutoDiscoveryMixinPlugin> getMixinPlugins() {
+    public static List<MixinPlugin> getMixinPlugins() {
         return mixinPlugins;
     }
 
@@ -30,6 +34,9 @@ public class AutoDiscoveryMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void onLoad(String mixinPackage) {
+        //? if >= 26.1 {
+        /*MixinExtrasBootstrap.init();
+        *///?}
         this.mixinPackage = mixinPackage;
         mixinPlugins.add(this);
     }
@@ -146,4 +153,3 @@ public class AutoDiscoveryMixinPlugin implements IMixinConfigPlugin {
 
     }
 }
-//?}

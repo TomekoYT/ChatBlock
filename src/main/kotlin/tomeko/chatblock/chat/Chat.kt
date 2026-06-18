@@ -18,12 +18,6 @@ import kotlin.math.*
 
 object Chat {
     //? if = 1.8.9 {
-    val config get() = ChatBlockConfig
-    //?} else {
-    /*val config get() = ChatBlockConfig.CONFIG.instance()
-    *///?}
-
-    //? if = 1.8.9 {
     fun register() {
         MinecraftForge.EVENT_BUS.register(Chat)
     }
@@ -55,19 +49,19 @@ object Chat {
     private fun allowReceiving(msg: String): Boolean {
         if (msg.isEmpty()) return true
 
-        val message = if (config.blockReceivingIgnoreFormatting) msg.replace(Regex("§."), "") else msg
+        val message = if (ChatBlockConfig.blockReceivingIgnoreFormatting) msg.replace(Regex("§."), "") else msg
 
-        for (messageToBlock in config.messagesToBlockReceiving) {
+        for (messageToBlock in ChatBlockConfig.messagesToBlockReceiving) {
             if (messageToBlock.isEmpty()) continue
 
             val matches =
-                if (config.blockReceivingCaseSensitive)
+                if (ChatBlockConfig.blockReceivingCaseSensitive)
                     message.contains(messageToBlock)
                 else
                     message.contains(messageToBlock, ignoreCase = true)
 
             if (matches) {
-                if (config.blockReceivingInfoMessage) {
+                if (ChatBlockConfig.blockReceivingInfoMessage) {
                     sendClientMessage("Blocked receiving message: $message, contains: $messageToBlock")
                 }
                 return false
@@ -81,15 +75,15 @@ object Chat {
     fun allowSending(message: String): Boolean {
         if (message.isEmpty()) return true
 
-        for (wordToBlock in config.wordsToBlockSending) {
+        for (wordToBlock in ChatBlockConfig.wordsToBlockSending) {
             if (wordToBlock.isEmpty()) continue
 
             val wordsInMessage = message.split(" ")
 
             for (word in wordsInMessage) {
                 val similar = 100 * similarity(word, wordToBlock)
-                if (similar >= config.blockSendingSimilarity) {
-                    if (config.blockSendingInfoMessage) {
+                if (similar >= ChatBlockConfig.blockSendingSimilarity) {
+                    if (ChatBlockConfig.blockSendingInfoMessage) {
                         sendClientMessage(
                             "Blocked sending message: $message, matched: $word with $wordToBlock (${
                                 round(
@@ -125,10 +119,8 @@ object Chat {
     private fun sendClientMessage(message: String) {
         //? if = 1.8.9 {
         Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${message}"))
-        //?} else if >= 26.1 {
+        //?} else {
         /*Minecraft.getInstance().gui.chat.addClientSystemMessage(Component.literal(message).withStyle{it.withColor(ChatFormatting.RED)})
-        *///?} else {
-        /*Minecraft.getInstance().gui.chat.addMessage(Component.literal(message).withStyle{it.withColor(ChatFormatting.RED)})
         *///?}
     }
 }

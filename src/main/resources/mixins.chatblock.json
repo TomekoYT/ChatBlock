@@ -1,7 +1,9 @@
 {
-  "package": "${base_group}.mixin",
-  "plugin": "${base_group}.init.AutoDiscoveryMixinPlugin",
+  "plugin": "${base_group}.utils.MixinPlugin",
+  "package": "${base_group}.mixins",
   "refmap": "mixins.${mod_id}.refmap.json",
-  "minVersion": "0.7",
-  "compatibilityLevel": "JAVA_${java_version}"
+  "compatibilityLevel": "JAVA_${java_version}",
+  "overwrites": {
+    "requireAnnotations": false
+  }
 }

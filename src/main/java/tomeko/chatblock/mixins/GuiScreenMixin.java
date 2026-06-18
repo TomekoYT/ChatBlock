@@ -1,4 +1,4 @@
-package tomeko.chatblock.mixin;
+package tomeko.chatblock.mixins;
 
 //? if = 1.8.9 {
 import net.minecraft.client.gui.GuiScreen;
@@ -11,8 +11,8 @@ import tomeko.chatblock.chat.Chat;
 @Mixin(GuiScreen.class)
 public class GuiScreenMixin {
     @Inject(method = "sendChatMessage(Ljava/lang/String;Z)V", at = @At("HEAD"), cancellable = true)
-    private void blockSending(String message, boolean addToChat, CallbackInfo ci) {
-        if (!Chat.allowSending(message)) {
+    private void blockSending(String msg, boolean addToChat, CallbackInfo ci) {
+        if (!Chat.allowSending(msg)) {
             ci.cancel();
         }
     }

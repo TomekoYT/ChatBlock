@@ -8,35 +8,33 @@
 		"Tomeko"
 	],
 	"contact": {
-		"homepage": "https://modrinth.com/mod/chatblock",
-		"sources": "https://github.com/TomekoYT/ChatBlock",
-		"issues": "https://github.com/TomekoYT/ChatBlock/issues"
+		"homepage": "https://modrinth.com/mod/${mod_id}",
+		"sources": "https://github.com/TomekoYT/${mod_archives_name}",
+		"issues": "https://github.com/TomekoYT/${mod_archives_name}/issues"
 	},
 	"license": "GPL-3.0",
-	"icon": "assets/chatblock/icon.png",
+	"icon": "assets/${mod_id}/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			{
-				"value": "tomeko.chatblock.ChatBlock",
-				"adapter": "kotlin"
-			}
+			"${base_group}.${mod_archives_name}"
 		],
 		"modmenu": [
-			{
-				"value": "tomeko.chatblock.config.ModMenuIntegration",
-				"adapter": "kotlin"
-			}
+			"${base_group}.config.ModMenuIntegration"
 		]
 	},
+	"mixins": [
+		"mixins.${mod_id}.json"
+	],
 	"depends": {
 		"java": ">=${java_version}",
 		"minecraft": ">=${minecraft_version}",
 		"fabricloader": ">=${fabric_loader_version}",
 		"fabric-api": ">=${fabric_api_version}",
 		"fabric-language-kotlin": ">=${fabric_language_kotlin_version}",
-
-		"yet_another_config_lib_v3": ">=${yacl_version}",
+		"oneconfigbootstrap": ">=${oneconfig_version}"
+	},
+	"suggests": {
 		"modmenu": ">=${mod_menu_version}"
 	},
 	"custom": {
@@ -44,7 +42,7 @@
 		"modmenu": {
 			"links": {
 				"modmenu.discord": "https://discord.com/invite/FfzrbycDws",
-				"modmenu.modrinth": "https://modrinth.com/mod/chatblock"
+				"modmenu.modrinth": "https://modrinth.com/mod/${mod_id}"
 			},
 			"update_checker": true
 		}

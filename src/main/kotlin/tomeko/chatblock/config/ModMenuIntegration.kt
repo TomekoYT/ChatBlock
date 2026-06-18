@@ -1,15 +1,14 @@
 package tomeko.chatblock.config
 
-//? if >= 1.21.9 {
+//? if >= 26.1 {
 /*import com.terraformersmc.modmenu.api.ConfigScreenFactory
 import com.terraformersmc.modmenu.api.ModMenuApi
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
+import net.minecraft.client.gui.screens.Screen
+import org.polyfrost.oneconfig.utils.v1.dsl.createScreen
 
-@Environment(EnvType.CLIENT)
 class ModMenuIntegration : ModMenuApi {
     override fun getModConfigScreenFactory(): ConfigScreenFactory<*> {
-        return ConfigScreenFactory { parent -> ChatBlockConfig.configScreen(parent) }
+        return { _: Screen -> ChatBlockConfig.createScreen() }
     }
 }
 *///?}
