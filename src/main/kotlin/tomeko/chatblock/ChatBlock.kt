@@ -39,7 +39,7 @@ class ChatBlock
         /*EventManager.INSTANCE.register(this)
         *///?}
 
-        //Chat.register()
+        Chat.register()
 
         ChatBlockCommand.register()
 
