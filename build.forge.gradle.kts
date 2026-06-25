@@ -61,7 +61,6 @@ repositories {
     mavenCentral()
     maven("https://repo.spongepowered.org/maven/")
     maven("https://repo.polyfrost.cc/releases")
-    maven("https://repo.hypixel.net/repository/Hypixel/")
 }
 
 val shadowImpl = configurations.create("shadowImpl")
