@@ -38,7 +38,6 @@
 		"modmenu": ">=${mod_menu_version}"
 	},
 	"custom": {
-		"youtube": "https://www.youtube.com/@TomekoYT",
 		"modmenu": {
 			"links": {
 				"modmenu.discord": "https://discord.com/invite/FfzrbycDws",
