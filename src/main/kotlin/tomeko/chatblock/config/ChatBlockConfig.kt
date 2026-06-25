@@ -80,18 +80,18 @@ object ChatBlockConfig : Config(
 
     @Info(
         //? if = 1.8.9 {
-        /*text = "Block receiving following messages:",
+        /*text = "Block receiving following messages (supports Java/Kotlin regex):",
         type = InfoType.INFO,
         size = 2
         *///?} else {
-        description = "Block receiving following messages:",
+        description = "Block receiving following messages (supports Java/Kotlin regex):",
         //?}
     )
     private var receivingInfo = null
 
     //? if >= 26.1 {
-    @Include
-    @StringList(title = "")
+    //@Include
+    @StringList(title = "Block receiving following messages (supports Java/Kotlin regex):")
     var messagesToBlockReceivingStringList: String = ""
     //?}
 
@@ -155,8 +155,8 @@ object ChatBlockConfig : Config(
     private var sendingInfo = null
 
     //? if >= 26.1 {
-    @Include
-    @StringList(title = "")
+    //@Include
+    @StringList(title = "Block sending following words:")
     var wordsToBlockSendingStringList: String = ""
     //?}
 
