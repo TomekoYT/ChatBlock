@@ -44,5 +44,7 @@ class ChatBlock
         ChatBlockCommand.register()
 
         ChatBlockConfig.register()
+
+        Debug.forcePrint("Initialized!")
     }
 }

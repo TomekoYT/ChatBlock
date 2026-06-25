@@ -25,7 +25,7 @@ object ChatBlockConfig : Config(
     "${Constants.MOD_ID}.json",
     "/assets/${Constants.MOD_ID}/icon.png",
     Constants.MOD_NAME,
-    Category.QOL
+    Category.UTILITY
     //?}
 ) {
     fun register() {
@@ -168,6 +168,16 @@ object ChatBlockConfig : Config(
         get() = wordsToBlockSendingStringList.split(" ").filter { it.isNotBlank() }.toTypedArray()
     //?}
 
+    @Switch(
+        //? if = 1.8.9 {
+        /*name
+        *///?} else {
+        title
+        //?}
+        = "Debug Mode"
+    )
+    var debugModeEnabled = false
+
     //? if = 1.8.9 {
     /*override fun getCustomOption(
         field: Field,
@@ -238,7 +248,7 @@ object ChatBlockConfig : Config(
                 }
                 clazz = clazz.superclass
             }
-        } catch (e: Throwable) {}
+        } catch (_: Throwable) {}
     }
 
     private fun scanAndClean(obj: Any) {
@@ -267,7 +277,7 @@ object ChatBlockConfig : Config(
                             isTarget = true
                             break
                         }
-                    } catch (e: Exception) {}
+                    } catch (_: Exception) {}
                     c = c.superclass
                 }
 
@@ -279,7 +289,7 @@ object ChatBlockConfig : Config(
                                 val f = currentClass.getDeclaredField(fieldName)
                                 f.isAccessible = true
                                 f.set(obj, "")
-                            } catch (e: Exception) {}
+                            } catch (_: Exception) {}
                         }
                         currentClass = currentClass.superclass
                     }
@@ -295,7 +305,7 @@ object ChatBlockConfig : Config(
                             if (fieldVal != null && fieldVal !== obj && !field.type.isPrimitive) {
                                 scanAndClean(fieldVal)
                             }
-                        } catch (e: Exception) {}
+                        } catch (_: Exception) {}
                     }
                     scanClass = scanClass.superclass
                 }
