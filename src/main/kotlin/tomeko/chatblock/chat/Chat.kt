@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component
 //?}
 import net.minecraft.client.Minecraft
 import tomeko.chatblock.config.ChatBlockConfig
+import tomeko.chatblock.utils.Debug
 import kotlin.math.*
 
 object Chat {
@@ -54,11 +55,18 @@ object Chat {
         for (messageToBlock in ChatBlockConfig.messagesToBlockReceiving) {
             if (messageToBlock.isEmpty()) continue
 
-            val matches =
-                if (ChatBlockConfig.blockReceivingCaseSensitive)
-                    message.contains(messageToBlock)
-                else
-                    message.contains(messageToBlock, ignoreCase = true)
+            val matches = try {
+                Regex(
+                    messageToBlock,
+                    if (ChatBlockConfig.blockReceivingCaseSensitive)
+                        emptySet()
+                    else
+                        setOf(RegexOption.IGNORE_CASE)
+                ).containsMatchIn(message)
+            } catch (_: Exception) {
+                Debug.print("Invalid regex: $messageToBlock")
+                false
+            }
 
             if (matches) {
                 if (ChatBlockConfig.blockReceivingInfoMessage) {
@@ -101,28 +109,40 @@ object Chat {
     }
 
     private fun similarity(a: String, b: String): Float {
-        val dp = Array(a.length + 1) { Array(b.length + 1) { 0 } }
-        for (i in 0..a.length) dp[i][0] = i
-        for (j in 0..b.length) dp[0][j] = j
+        if (a.isEmpty() && b.isEmpty()) return 1f
 
-        for (i in 1..a.length) {
-            for (j in 1..b.length) {
-                val cost = if (a[i - 1].lowercaseChar() == b[j - 1].lowercaseChar()) 0 else 1
+        val (s1, s2) = if (a.length <= b.length) a to b else b to a
+        var prev = IntArray(s1.length + 1) { it }
+        var curr = IntArray(s1.length + 1)
 
-                dp[i][j] = min(min(dp[i - 1][j] + 1, dp[i][j - 1] + 1), dp[i - 1][j - 1] + cost)
+        for (i in 1..s2.length) {
+            curr[0] = i
+            for (j in 1..s1.length) {
+                val cost = if (s2[i - 1].lowercaseChar() == s1[j - 1].lowercaseChar()) 0 else 1
+                curr[j] = minOf(
+                    prev[j] + 1,
+                    curr[j - 1] + 1,
+                    prev[j - 1] + cost
+                )
             }
+
+            val tmp = prev
+            prev = curr
+            curr = tmp
         }
 
-        return 1.0f - dp[a.length][b.length].toFloat() / max(a.length, b.length).toFloat()
+        return 1f - prev[s1.length].toFloat() / maxOf(a.length, b.length).toFloat()
     }
 
     private fun sendClientMessage(message: String) {
         //? if = 1.8.9 {
         /*Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${message}"))
         *///?} else if >= 26.2 {
-        Minecraft.getInstance().gui.hud.chat.addClientSystemMessage(Component.literal(message).withStyle{it.withColor(ChatFormatting.RED)})
-        //?} else {
-        /*Minecraft.getInstance().gui.chat.addClientSystemMessage(Component.literal(message).withStyle{it.withColor(ChatFormatting.RED)})
-        *///?}
+        /*Minecraft.getInstance().gui.hud.chat.addClientSystemMessage(
+            Component.literal(message).withStyle { it.withColor(ChatFormatting.RED) })
+        *///?} else {
+        Minecraft.getInstance().gui.chat.addClientSystemMessage(
+            Component.literal(message).withStyle { it.withColor(ChatFormatting.RED) })
+        //?}
     }
 }
