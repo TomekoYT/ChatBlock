@@ -1,8 +1,9 @@
-package tomeko.chatblock.utils;
+package tomeko.chatblock.plugins;
 
 //? if = 1.8.9 {
 /*import org.spongepowered.asm.lib.tree.ClassNode;
-*///?} else {
+ *///?} else {
+
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import org.objectweb.asm.tree.ClassNode;
 //?}
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -45,16 +47,16 @@ public class MixinPlugin implements IMixinConfigPlugin {
         String string = classUrl.toString();
         if (classUrl.getProtocol().equals("jar")) {
             try {
-                return new URL(string.substring(4).split("!")[0]);
+                return URI.create(string.substring(4).split("!")[0]).toURL();
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
         }
         if (string.endsWith(".class")) {
             try {
-                return new URL(string.replace("\\", "/")
+                return URI.create(string.replace("\\", "/")
                         .replace(getClass().getCanonicalName()
-                                .replace(".", "/") + ".class", ""));
+                                .replace(".", "/") + ".class", "")).toURL();
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
@@ -84,29 +86,23 @@ public class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public List<String> getMixins() {
         if (mixins != null) return mixins;
-        System.out.println("Trying to discover mixins");
         mixins = new ArrayList<>();
         URL classUrl = getClass().getProtectionDomain().getCodeSource().getLocation();
-        System.out.println("Found classes at " + classUrl);
         Path file;
         try {
             file = Paths.get(getBaseUrlForClassUrl(classUrl).toURI());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Base directory found at " + file);
         if (Files.isDirectory(file)) {
             walkDir(file);
         } else {
             walkJar(file);
         }
-        System.out.println("Found mixins: " + mixins);
-
         return mixins;
     }
 
     private void walkDir(Path classRoot) {
-        System.out.println("Trying to find mixins from directory");
         try (Stream<Path> classes = Files.walk(classRoot.resolve(getMixinBaseDir()))) {
             classes.map(it -> classRoot.relativize(it).toString())
                     .forEach(this::tryAddMixinClass);
@@ -116,7 +112,6 @@ public class MixinPlugin implements IMixinConfigPlugin {
     }
 
     private void walkJar(Path file) {
-        System.out.println("Trying to find mixins from jar file");
         try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(file))) {
             ZipEntry next;
             while ((next = zis.getNextEntry()) != null) {
