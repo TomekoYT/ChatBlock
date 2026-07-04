@@ -1,6 +1,6 @@
 package tomeko.chatblock.config.visualizer
 
-//? if >= 26.1 {
+//? if >= 1.21.11 {
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*

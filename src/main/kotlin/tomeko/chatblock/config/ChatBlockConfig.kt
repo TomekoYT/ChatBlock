@@ -78,7 +78,7 @@ object ChatBlockConfig : Config(
     private var receivingInfo: Nothing? = null
     *///?}
 
-    //? if >= 26.1 {
+    //? if >= 1.21.11 {
     @StringList
     var messagesToBlockReceivingStringList: String = ""
     //?}
@@ -87,7 +87,7 @@ object ChatBlockConfig : Config(
     //@CustomOption(id = "blockReceiving")
     //?}
     var messagesToBlockReceiving: Array<String> = emptyArray()
-        //? if >= 26.1 {
+        //? if >= 1.21.11 {
         get() = messagesToBlockReceivingStringList.split("\n").filter { it.isNotBlank() }.toTypedArray()
     //?}
 
@@ -141,7 +141,7 @@ object ChatBlockConfig : Config(
     private var sendingInfo: Nothing? = null
     *///?}
 
-    //? if >= 26.1 {
+    //? if >= 1.21.11 {
     @StringList
     var wordsToBlockSendingStringList: String = ""
     //?}
@@ -150,7 +150,7 @@ object ChatBlockConfig : Config(
     //@CustomOption(id = "blockSending")
     //?}
     var wordsToBlockSending: Array<String> = emptyArray()
-        //? if >= 26.1 {
+        //? if >= 1.21.11 {
         get() = wordsToBlockSendingStringList.split(" ").filter { it.isNotBlank() }.toTypedArray()
     //?}
 

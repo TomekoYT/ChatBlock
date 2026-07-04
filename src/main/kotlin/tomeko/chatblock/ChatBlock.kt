@@ -21,7 +21,7 @@ import tomeko.chatblock.utils.*
 )
 *///?}
 class ChatBlock
-//? if >= 26.1 {
+//? if >= 1.21.11 {
     : ClientModInitializer
 //?}
 {

@@ -1,6 +1,6 @@
 package tomeko.chatblock.config.annotations
 
-//? if >= 26.1 {
+//? if >= 1.21.11 {
 import org.polyfrost.oneconfig.api.config.v1.annotations.Option
 import tomeko.chatblock.config.visualizer.StringListVisualizer
 

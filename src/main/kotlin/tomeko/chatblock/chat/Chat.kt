@@ -137,6 +137,9 @@ object Chat {
     private fun sendClientMessage(message: String) {
         //? if = 1.8.9 {
         /*Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${message}"))
+        *///?} else if = 1.21.11 {
+        /*Minecraft.getInstance().gui.chat.addMessage(
+            Component.literal(message).withStyle { it.withColor(ChatFormatting.RED) })
         *///?} else if >= 26.2 {
         /*Minecraft.getInstance().gui.hud.chat.addClientSystemMessage(
             Component.literal(message).withStyle { it.withColor(ChatFormatting.RED) })
