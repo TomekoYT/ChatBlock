@@ -17,9 +17,11 @@ import tomeko.chatblock.utils.Constants
 
 object ChatBlockConfig : Config(
     //? if = 1.8.9 {
-    /*Mod(Constants.MOD_NAME,
-    ModType.UTIL_QOL,
-    "/assets/${Constants.MOD_ID}/icon.png"),
+    /*Mod(
+        Constants.MOD_NAME,
+        ModType.UTIL_QOL,
+        "/assets/${Constants.MOD_ID}/icon.png"
+    ),
     "${Constants.MOD_ID}.json"
     *///?} else {
     "${Constants.MOD_ID}.json",
@@ -52,9 +54,9 @@ object ChatBlockConfig : Config(
     @Switch(
         //? if = 1.8.9 {
         /*name
-        *///?} else {
-        title
-            //?}
+            *///?} else {
+            title
+                //?}
         = "Case-sensitive"
     )
     var blockReceivingCaseSensitive: Boolean = false
@@ -62,9 +64,9 @@ object ChatBlockConfig : Config(
     @Switch(
         //? if = 1.8.9 {
         /*name
-        *///?} else {
-        title
-            //?}
+            *///?} else {
+            title
+                //?}
         = "Send message informing about a block"
     )
     var blockReceivingInfoMessage: Boolean = false
@@ -84,12 +86,12 @@ object ChatBlockConfig : Config(
     //?}
 
     //? if = 1.8.9 {
-    //@CustomOption(id = "blockReceiving")
-    //?}
+    /*@CustomOption(id = "blockReceiving")
+    *///?}
     var messagesToBlockReceiving: Array<String> = emptyArray()
-        //? if >= 1.21.11 {
-        get() = messagesToBlockReceivingStringList.split("\n").filter { it.isNotBlank() }.toTypedArray()
-    //?}
+    //? if >= 1.21.11 {
+    get() = messagesToBlockReceivingStringList.split("\n").filter { it.isNotBlank() }.toTypedArray()
+//?}
 
 
     @Info(
@@ -107,27 +109,27 @@ object ChatBlockConfig : Config(
     @Slider(
         //? if = 1.8.9 {
         /*name
-        *///?} else {
-        title
-            //?}
+            *///?} else {
+            title
+                //?}
         = "Similarity",
         min = 1f,
         max = 100f,
         step =
             //? if = 1.8.9 {
             /*1
-            *///?} else {
-            1f
-        //?}
+        *///?} else {
+        1f
+    //?}
     )
     var blockSendingSimilarity: Int = 100
 
     @Switch(
         //? if = 1.8.9 {
         /*name
-        *///?} else {
-        title
-            //?}
+            *///?} else {
+            title
+                //?}
         = "Send message informing about a block"
     )
     var blockSendingInfoMessage: Boolean = true
@@ -147,19 +149,19 @@ object ChatBlockConfig : Config(
     //?}
 
     //? if = 1.8.9 {
-    //@CustomOption(id = "blockSending")
-    //?}
+    /*@CustomOption(id = "blockSending")
+    *///?}
     var wordsToBlockSending: Array<String> = emptyArray()
-        //? if >= 1.21.11 {
-        get() = wordsToBlockSendingStringList.split(" ").filter { it.isNotBlank() }.toTypedArray()
+    //? if >= 1.21.11 {
+    get() = wordsToBlockSendingStringList.split(" ").filter { it.isNotBlank() }.toTypedArray()
     //?}
 
     @Switch(
         //? if = 1.8.9 {
         /*name
-        *///?} else {
-        title
-            //?}
+            *///?} else {
+            title
+                //?}
         = "Debug Mode"
     )
     var debugModeEnabled = false
@@ -193,18 +195,22 @@ object ChatBlockConfig : Config(
         BlockReceivingListOption.apply {
             items.clear()
             items.addAll(messagesToBlockReceiving.map { message ->
-                WrappedBlock(message) {
-                    willBeRemoved = it
-                }
+                WrappedBlock(
+                    message = message,
+                    onRemove = { willBeRemoved = it },
+                    splitOnSpace = false
+                )
             })
         }
 
         BlockSendingListOption.apply {
             items.clear()
             items.addAll(wordsToBlockSending.map { message ->
-                WrappedBlock(message) {
-                    willBeRemoved = it
-                }
+                WrappedBlock(
+                    message = message,
+                    onRemove = { willBeRemoved = it },
+                    splitOnSpace = true
+                )
             })
         }
     }
@@ -215,7 +221,8 @@ object ChatBlockConfig : Config(
             .toTypedArray()
 
         wordsToBlockSending = BlockSendingListOption.items
-            .map { it.message }
+            .flatMap { it.message.split(Regex("\\s+")) }
+            .filter { it.isNotBlank() }
             .toTypedArray()
 
         super.save()

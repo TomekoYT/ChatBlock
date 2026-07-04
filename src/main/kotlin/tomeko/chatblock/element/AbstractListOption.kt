@@ -59,5 +59,14 @@ abstract class AbstractListOption<T> :
     protected abstract fun drawItem(item: T, vg: Long, x: Float, y: Float, inputHandler: InputHandler)
     protected abstract fun keyTypedItem(item: T, key: Char, keyCode: Int): Boolean
     protected abstract fun hasFocusItem(item: T): Boolean
+
+    fun insertAfter(current: T, newItem: T) {
+        val index = items.indexOf(current)
+        if (index != -1) {
+            items.add(index + 1, newItem)
+        } else {
+            items.add(newItem)
+        }
+    }
 }
 *///?}

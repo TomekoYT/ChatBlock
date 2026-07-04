@@ -8,7 +8,8 @@ import tomeko.chatblock.utils.Constants
 
 class WrappedBlock(
     var message: String,
-    private val onRemove: (WrappedBlock) -> Unit
+    private val onRemove: (WrappedBlock) -> Unit,
+    private val splitOnSpace: Boolean = false
 ) {
     private val removeButton = BasicButton(
         32, 32,
@@ -19,7 +20,29 @@ class WrappedBlock(
 
     private val textField = TextField(
         getMessage = { message },
-        setMessage = { message = it }
+        setMessage = { message = it },
+        onKeyTyped = { key, _ ->
+            if (!splitOnSpace || key != ' ') {
+                return@TextField false
+            }
+
+            if (message.isBlank()) {
+                return@TextField true
+            }
+
+            unfocus()
+
+            val next = WrappedBlock(
+                "",
+                onRemove,
+                splitOnSpace = true
+            )
+
+            BlockSendingListOption.insertAfter(this, next)
+            next.focus()
+
+            return@TextField true
+        }
     )
 
     init {
@@ -38,5 +61,13 @@ class WrappedBlock(
 
     fun hasFocus() =
         textField.isToggled
+
+    fun focus() {
+        textField.focus()
+    }
+
+    fun unfocus() {
+        textField.unfocus()
+    }
 }
 *///?}

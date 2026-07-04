@@ -5,9 +5,11 @@ package tomeko.chatblock.element
 
 object BlockSendingListOption : AbstractListOption<WrappedBlock>() {
     override fun createWrapped() =
-        WrappedBlock(String()) {
-            willBeRemoved = it
-        }
+        WrappedBlock(
+            "",
+            { willBeRemoved = it },
+            splitOnSpace = true
+        )
 
     override fun drawItem(item: WrappedBlock, vg: Long, x: Float, y: Float, inputHandler: InputHandler) {
         item.draw(vg, x, y, inputHandler)
