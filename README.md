@@ -21,7 +21,6 @@ Multiversion mod that adds a filter list to block/hide sending and receiving cus
 #### Block receiving custom messages
 
 - on/off case-sensitive
-- on/off ignore formatting
 - Java/Kotlin regex support
 - message informing about a block
 
