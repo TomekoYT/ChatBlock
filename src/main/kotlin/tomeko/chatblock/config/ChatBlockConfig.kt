@@ -43,10 +43,11 @@ object ChatBlockConfig : Config(
         type = InfoType.INFO,
         size = 2
         *///?} else {
-        description = "Block Receiving Custom Messages",
+        title = "Block Receiving Custom Messages",
+        description = ""
         //?}
     )
-    private var receivingTitle = null
+    private var receivingTitle: Nothing? = null
 
     @Switch(
         //? if = 1.8.9 {
@@ -64,34 +65,21 @@ object ChatBlockConfig : Config(
         *///?} else {
         title
             //?}
-        = "Ignore formatting"
-    )
-    var blockReceivingIgnoreFormatting: Boolean = true
-
-    @Switch(
-        //? if = 1.8.9 {
-        /*name
-        *///?} else {
-        title
-            //?}
         = "Send message informing about a block"
     )
     var blockReceivingInfoMessage: Boolean = false
 
-    @Info(
-        //? if = 1.8.9 {
-        /*text = "Block receiving following messages (supports Java/Kotlin regex):",
+    //? if = 1.8.9 {
+    /*@Info(
+        text = "Block receiving following messages (supports Java/Kotlin regex):",
         type = InfoType.INFO,
         size = 2
-        *///?} else {
-        description = "Block receiving following messages (supports Java/Kotlin regex):",
-        //?}
     )
-    private var receivingInfo = null
+    private var receivingInfo: Nothing? = null
+    *///?}
 
     //? if >= 26.1 {
-    //@Include
-    @StringList(title = "Block receiving following messages (supports Java/Kotlin regex):")
+    @StringList
     var messagesToBlockReceivingStringList: String = ""
     //?}
 
@@ -110,10 +98,11 @@ object ChatBlockConfig : Config(
         type = InfoType.INFO,
         size = 2
         *///?} else {
-        description = "Block Sending Custom Words",
+        title = "Block Sending Custom Words",
+        description = ""
         //?}
     )
-    private var sendingTitle = null
+    private var sendingTitle: Nothing? = null
 
     @Slider(
         //? if = 1.8.9 {
@@ -143,20 +132,17 @@ object ChatBlockConfig : Config(
     )
     var blockSendingInfoMessage: Boolean = true
 
-    @Info(
-        //? if = 1.8.9 {
-        /*text = "Block sending following words:",
+    //? if = 1.8.9 {
+    /*@Info(
+        text = "Block sending following words:",
         type = InfoType.INFO,
         size = 2
-        *///?} else {
-        description = "Block sending following words:",
-        //?}
     )
-    private var sendingInfo = null
+    private var sendingInfo: Nothing? = null
+    *///?}
 
     //? if >= 26.1 {
-    //@Include
-    @StringList(title = "Block sending following words:")
+    @StringList
     var wordsToBlockSendingStringList: String = ""
     //?}
 
@@ -173,7 +159,7 @@ object ChatBlockConfig : Config(
         /*name
         *///?} else {
         title
-        //?}
+            //?}
         = "Debug Mode"
     )
     var debugModeEnabled = false
@@ -248,7 +234,8 @@ object ChatBlockConfig : Config(
                 }
                 clazz = clazz.superclass
             }
-        } catch (_: Throwable) {}
+        } catch (_: Throwable) {
+        }
     }
 
     private fun scanAndClean(obj: Any) {
@@ -277,7 +264,8 @@ object ChatBlockConfig : Config(
                             isTarget = true
                             break
                         }
-                    } catch (_: Exception) {}
+                    } catch (_: Exception) {
+                    }
                     c = c.superclass
                 }
 
@@ -289,7 +277,8 @@ object ChatBlockConfig : Config(
                                 val f = currentClass.getDeclaredField(fieldName)
                                 f.isAccessible = true
                                 f.set(obj, "")
-                            } catch (_: Exception) {}
+                            } catch (_: Exception) {
+                            }
                         }
                         currentClass = currentClass.superclass
                     }
@@ -305,7 +294,8 @@ object ChatBlockConfig : Config(
                             if (fieldVal != null && fieldVal !== obj && !field.type.isPrimitive) {
                                 scanAndClean(fieldVal)
                             }
-                        } catch (_: Exception) {}
+                        } catch (_: Exception) {
+                        }
                     }
                     scanClass = scanClass.superclass
                 }

@@ -50,7 +50,7 @@ object Chat {
     private fun allowReceiving(msg: String): Boolean {
         if (msg.isEmpty()) return true
 
-        val message = if (ChatBlockConfig.blockReceivingIgnoreFormatting) msg.replace(Regex("§."), "") else msg
+        val message = msg.replace(Regex("§."), "")
 
         for (messageToBlock in ChatBlockConfig.messagesToBlockReceiving) {
             if (messageToBlock.isEmpty()) continue
@@ -62,7 +62,7 @@ object Chat {
                         emptySet()
                     else
                         setOf(RegexOption.IGNORE_CASE)
-                ).containsMatchIn(message)
+                ).matches(message)
             } catch (_: Exception) {
                 Debug.print("Invalid regex: $messageToBlock")
                 false
