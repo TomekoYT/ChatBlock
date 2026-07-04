@@ -48,12 +48,7 @@ dependencies {
     implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
     implementation("net.fabricmc:fabric-language-kotlin:$fabricLanguageKotlinVersion")
 
-    val oneconfigModules = arrayOf("commands", "config-impl", "events", "hud", "internal", "ui", "utils")
-    for (module in oneconfigModules) {
-        implementation("org.polyfrost.oneconfig:${module}:${oneconfigVersion}")
-    }
     implementation("org.polyfrost.oneconfig:$minecraftVersion-fabric:$oneconfigVersion")
-
     implementation("com.terraformersmc:modmenu:$modMenuVersion")
 }
 
