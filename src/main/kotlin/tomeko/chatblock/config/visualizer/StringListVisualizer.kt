@@ -32,6 +32,9 @@ class StringListVisualizer : Visualizer {
         var items by remember { mutableStateOf(initialList) }
         var newItemText by remember { mutableStateOf("") }
 
+        var editingIndex by remember { mutableStateOf<Int?>(null) }
+        var editingText by remember { mutableStateOf("") }
+
         LaunchedEffect(initialList) {
             items = initialList
         }
@@ -59,19 +62,77 @@ class StringListVisualizer : Visualizer {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            for (item in items) {
+            items.withIndex().forEach { (index, item) ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                 ) {
-                    Button(
-                        onClick = { updateProperty(items - item) },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F)),
-                        modifier = Modifier.padding(end = 12.dp)
-                    ) {
-                        Text("-", color = Color.White)
+                    if (editingIndex == index) {
+                        Button(
+                            onClick = {
+                                val trimmed = editingText.trim()
+                                if (trimmed.isNotBlank()) {
+                                    val newList = items.toMutableList()
+                                    newList[index] = trimmed
+                                    updateProperty(newList)
+                                }
+                                editingIndex = null
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF2E7D32)),
+                            modifier = Modifier.padding(end = 4.dp)
+                        ) {
+                            Text("✓", color = Color.White)
+                        }
+
+                        Button(
+                            onClick = { editingIndex = null },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF757575)),
+                            modifier = Modifier.padding(end = 12.dp)
+                        ) {
+                            Text("X", color = Color.White)
+                        }
+
+                        OutlinedTextField(
+                            value = editingText,
+                            onValueChange = { editingText = it },
+                            singleLine = true,
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = Color.White,
+                                cursorColor = Color.White,
+                                focusedBorderColor = Color.LightGray,
+                                unfocusedBorderColor = Color.DarkGray
+                            ),
+                            modifier = Modifier.weight(1f)
+                        )
+                    } else {
+                        Button(
+                            onClick = {
+                                updateProperty(items - item)
+                                if (editingIndex == index) editingIndex = null
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFD32F2F)),
+                            modifier = Modifier.padding(end = 4.dp)
+                        ) {
+                            Text("-", color = Color.White)
+                        }
+
+                        Button(
+                            onClick = {
+                                editingIndex = index
+                                editingText = item
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF1976D2)),
+                            modifier = Modifier.padding(end = 12.dp)
+                        ) {
+                            Text("✏", color = Color.White)
+                        }
+
+                        Text(
+                            text = item,
+                            color = Color.White,
+                            modifier = Modifier.weight(1f)
+                        )
                     }
-                    Text(text = item, color = Color.White)
                 }
             }
 
