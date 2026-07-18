@@ -6,12 +6,10 @@ import cc.polyfrost.oneconfig.config.annotations.*
 import cc.polyfrost.oneconfig.config.core.ConfigUtils
 import cc.polyfrost.oneconfig.config.data.*
 import cc.polyfrost.oneconfig.config.elements.*
-import tomeko.chatblock.element.*
 import java.lang.reflect.Field
 *///?} else {
 import org.polyfrost.oneconfig.api.config.v1.Config
 import org.polyfrost.oneconfig.api.config.v1.annotations.*
-import tomeko.chatblock.config.annotations.StringList
 //?}
 import tomeko.chatblock.utils.Constants
 
@@ -39,17 +37,10 @@ object ChatBlockConfig : Config(
         //?}
     }
 
-    @Info(
-        //? if = 1.8.9 {
-        /*text = "Block Receiving Custom Messages",
-        type = InfoType.INFO,
-        size = 2
-        *///?} else {
-        title = "Block Receiving Custom Messages",
-        description = ""
-        //?}
-    )
-    private var receivingTitle: Nothing? = null
+    //? if = 1.8.9 {
+    /*@Exclude
+    *///?}
+    const val CATEGORY_BLOCK_RECEIVING = "Block Receiving Custom Messages"
 
     @Switch(
         //? if = 1.8.9 {
@@ -57,7 +48,8 @@ object ChatBlockConfig : Config(
             *///?} else {
             title
                 //?}
-        = "Case-sensitive"
+        = "Case-sensitive",
+        category = CATEGORY_BLOCK_RECEIVING
     )
     var blockReceivingCaseSensitive: Boolean = false
 
@@ -67,21 +59,13 @@ object ChatBlockConfig : Config(
             *///?} else {
             title
                 //?}
-        = "Send message informing about a block"
+        = "Send message informing about a block",
+        category = CATEGORY_BLOCK_RECEIVING
     )
     var blockReceivingInfoMessage: Boolean = false
 
-    //? if = 1.8.9 {
-    /*@Info(
-        text = "Block receiving following messages (supports Java/Kotlin regex):",
-        type = InfoType.INFO,
-        size = 2
-    )
-    private var receivingInfo: Nothing? = null
-    *///?}
-
     //? if >= 1.21.11 {
-    @StringList
+    @StringList(category = CATEGORY_BLOCK_RECEIVING)
     var messagesToBlockReceivingStringList: String = ""
     //?}
 
@@ -94,17 +78,10 @@ object ChatBlockConfig : Config(
 //?}
 
 
-    @Info(
-        //? if = 1.8.9 {
-        /*text = "Block Sending Custom Words",
-        type = InfoType.INFO,
-        size = 2
-        *///?} else {
-        title = "Block Sending Custom Words",
-        description = ""
-        //?}
-    )
-    private var sendingTitle: Nothing? = null
+    //? if = 1.8.9 {
+    /*@Exclude
+    *///?}
+    const val CATEGORY_BLOCK_SENDING = "Block Sending Custom Words"
 
     @Slider(
         //? if = 1.8.9 {
@@ -121,6 +98,7 @@ object ChatBlockConfig : Config(
         *///?} else {
         1f
     //?}
+        , category = CATEGORY_BLOCK_SENDING
     )
     var blockSendingSimilarity: Int = 100
 
@@ -130,21 +108,13 @@ object ChatBlockConfig : Config(
             *///?} else {
             title
                 //?}
-        = "Send message informing about a block"
+        = "Send message informing about a block",
+        category = CATEGORY_BLOCK_SENDING
     )
     var blockSendingInfoMessage: Boolean = true
 
-    //? if = 1.8.9 {
-    /*@Info(
-        text = "Block sending following words:",
-        type = InfoType.INFO,
-        size = 2
-    )
-    private var sendingInfo: Nothing? = null
-    *///?}
-
     //? if >= 1.21.11 {
-    @StringList
+    @StringList(category = CATEGORY_BLOCK_SENDING)
     var wordsToBlockSendingStringList: String = ""
     //?}
 
@@ -156,13 +126,20 @@ object ChatBlockConfig : Config(
     get() = wordsToBlockSendingStringList.split(" ").filter { it.isNotBlank() }.toTypedArray()
     //?}
 
+
+    //? if = 1.8.9 {
+    /*@Exclude
+    *///?}
+    const val CATEGORY_DEBUG = "Debug"
+
     @Switch(
         //? if = 1.8.9 {
         /*name
             *///?} else {
             title
                 //?}
-        = "Debug Mode"
+        = "Debug Mode",
+        category = CATEGORY_DEBUG
     )
     var debugModeEnabled = false
 
@@ -177,13 +154,13 @@ object ChatBlockConfig : Config(
         when (annotation.id) {
             "blockReceiving" -> {
                 val option = BlockReceivingListOption
-                ConfigUtils.getSubCategory(page, "General", "").options.add(option)
+                ConfigUtils.getSubCategory(page, CATEGORY_BLOCK_RECEIVING, "").options.add(option)
                 return option
             }
 
             else -> {
                 val option = BlockSendingListOption
-                ConfigUtils.getSubCategory(page, "General", "").options.add(option)
+                ConfigUtils.getSubCategory(page, CATEGORY_BLOCK_SENDING, "").options.add(option)
                 return option
             }
         }
@@ -198,7 +175,8 @@ object ChatBlockConfig : Config(
                 WrappedBlock(
                     message = message,
                     onRemove = { willBeRemoved = it },
-                    splitOnSpace = false
+                    splitOnSpace = false,
+                    owner = BlockReceivingListOption
                 )
             })
         }
@@ -209,7 +187,8 @@ object ChatBlockConfig : Config(
                 WrappedBlock(
                     message = message,
                     onRemove = { willBeRemoved = it },
-                    splitOnSpace = true
+                    splitOnSpace = true,
+                    owner = BlockSendingListOption
                 )
             })
         }

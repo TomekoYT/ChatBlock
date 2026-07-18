@@ -39,12 +39,15 @@ class ChatBlock
         /*EventManager.INSTANCE.register(this)
         *///?}
 
-        Chat.register()
+        BlockReceivingMessages.register()
+        //? if >= 1.21.11 {
+        BlockSendingWords.register()
+        //?}
 
         ChatBlockCommand.register()
 
         ChatBlockConfig.register()
 
-        Debug.forcePrint("Initialized!")
+        Debug.forceLog("Initialized!")
     }
 }
