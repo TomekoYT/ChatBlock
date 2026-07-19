@@ -5,9 +5,16 @@ package tomeko.chatblock.config
 import cc.polyfrost.oneconfig.gui.elements.BasicButton
 import cc.polyfrost.oneconfig.gui.elements.IFocusable
 import cc.polyfrost.oneconfig.gui.elements.text.TextInputField
+import cc.polyfrost.oneconfig.renderer.asset.SVG
 import cc.polyfrost.oneconfig.utils.InputHandler
 import cc.polyfrost.oneconfig.utils.color.ColorPalette
 import tomeko.chatblock.utils.Constants
+
+val PLUS_ICON: SVG = SVG("/assets/${Constants.MOD_ID}/icons/plus.svg")
+val MINUS_ICON: SVG = SVG("/assets/${Constants.MOD_ID}/icons/minus.svg")
+val UP_ICON: SVG = SVG("/assets/${Constants.MOD_ID}/icons/up.svg")
+val DOWN_ICON: SVG = SVG("/assets/${Constants.MOD_ID}/icons/down.svg")
+val SORT_ICON: SVG = SVG("/assets/${Constants.MOD_ID}/icons/sort.svg")
 
 class TextField(
     private val getMessage: () -> String,
@@ -57,9 +64,23 @@ class WrappedBlock(
 ) {
     private val removeButton = BasicButton(
         32, 32,
-        Constants.MINUS_ICON,
+        MINUS_ICON,
         BasicButton.ALIGNMENT_CENTER,
         ColorPalette.PRIMARY_DESTRUCTIVE
+    )
+
+    private val upButton = BasicButton(
+        32, 32,
+        UP_ICON,
+        BasicButton.ALIGNMENT_CENTER,
+        ColorPalette.PRIMARY
+    )
+
+    private val downButton = BasicButton(
+        32, 32,
+        DOWN_ICON,
+        BasicButton.ALIGNMENT_CENTER,
+        ColorPalette.PRIMARY
     )
 
     private val textField = TextField(
@@ -94,11 +115,21 @@ class WrappedBlock(
         removeButton.setClickAction {
             onRemove(this)
         }
+
+        upButton.setClickAction {
+            owner?.moveItemUp(this)
+        }
+
+        downButton.setClickAction {
+            owner?.moveItemDown(this)
+        }
     }
 
     fun draw(vg: Long, x: Float, y: Float, inputHandler: InputHandler) {
-        removeButton.draw(vg, x, y, inputHandler)
-        textField.draw(vg, x + 40, y, inputHandler)
+        upButton.draw(vg, x, y, inputHandler)
+        downButton.draw(vg, x + 40, y, inputHandler)
+        removeButton.draw(vg, x + 80, y, inputHandler)
+        textField.draw(vg, x + 120, y, inputHandler)
     }
 
     fun keyTyped(key: Char, keyCode: Int) =
@@ -126,21 +157,35 @@ abstract class AbstractListOption<T>(
 
     protected val addButton = BasicButton(
         32, 32,
-        Constants.PLUS_ICON,
+        PLUS_ICON,
+        BasicButton.ALIGNMENT_CENTER,
+        ColorPalette.PRIMARY
+    )
+
+    protected val sortButton = BasicButton(
+        32, 32,
+        SORT_ICON,
         BasicButton.ALIGNMENT_CENTER,
         ColorPalette.PRIMARY
     )
 
     val items: MutableList<T> = ArrayList()
     var willBeRemoved: T? = null
+    private var pendingMoveUp: T? = null
+    private var pendingMoveDown: T? = null
 
     init {
         addButton.setClickAction {
             items.add(createWrapped())
         }
+
+        sortButton.setClickAction {
+            items.sortWith(sortComparator())
+        }
     }
 
     protected abstract fun createWrapped(): T
+    protected abstract fun sortComparator(): Comparator<T>
 
     override fun getHeight() = items.size * 48 + 32
 
@@ -153,8 +198,38 @@ abstract class AbstractListOption<T>(
         }
 
         addButton.draw(vg, x.toFloat(), nextY.toFloat(), inputHandler)
+        sortButton.draw(vg, x.toFloat() + 40, nextY.toFloat(), inputHandler)
 
         checkWillBeRemoved()
+        checkPendingMoves()
+    }
+
+    fun moveItemUp(item: T) {
+        pendingMoveUp = item
+    }
+
+    fun moveItemDown(item: T) {
+        pendingMoveDown = item
+    }
+
+    private fun checkPendingMoves() {
+        pendingMoveUp?.let { item ->
+            val index = items.indexOf(item)
+            if (index > 0) {
+                items.removeAt(index)
+                items.add(index - 1, item)
+            }
+        }
+        pendingMoveUp = null
+
+        pendingMoveDown?.let { item ->
+            val index = items.indexOf(item)
+            if (index != -1 && index < items.size - 1) {
+                items.removeAt(index)
+                items.add(index + 1, item)
+            }
+        }
+        pendingMoveDown = null
     }
 
     private fun checkWillBeRemoved() {
@@ -206,6 +281,9 @@ open class BlockListOption(
 
     override fun hasFocusItem(item: WrappedBlock) =
         item.hasFocus()
+
+    override fun sortComparator(): Comparator<WrappedBlock> =
+        compareBy { it.message.lowercase() }
 }
 
 object BlockReceivingListOption : BlockListOption(
@@ -293,18 +371,52 @@ class StringListVisualizer : Visualizer {
             ChatBlockConfig.save()
         }
 
+        fun moveItem(index: Int, offset: Int) {
+            val targetIndex = index + offset
+            if (index !in items.indices || targetIndex !in items.indices) return
+
+            val newList = items.toMutableList()
+            val moved = newList.removeAt(index)
+            newList.add(targetIndex, moved)
+            updateProperty(newList)
+
+            editingIndex = when (editingIndex) {
+                index -> targetIndex
+                targetIndex -> index
+                else -> editingIndex
+            }
+        }
+
+        fun sortAlphabetically() {
+            val newList = items.sortedBy { it.lowercase() }
+            updateProperty(newList)
+            editingIndex = null
+        }
+
         Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
             val title =
                 if (prop.id == wordsToBlockSendingID) "Block sending following words:"
                 else "Block receiving following messages (supports Java/Kotlin regex):"
 
-            Text(
-                text = title,
-                color = Color.White,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            ) {
+                Text(
+                    text = title,
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Button(
+                    onClick = { sortAlphabetically() },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF607D8B))
+                ) {
+                    Text("Sort A-Z", color = Color.White)
+                }
+            }
 
             items.withIndex().forEach { (index, item) ->
                 Row(
@@ -349,6 +461,34 @@ class StringListVisualizer : Visualizer {
                             modifier = Modifier.weight(1f)
                         )
                     } else {
+                        Button(
+                            onClick = { moveItem(index, -1) },
+                            enabled = index > 0,
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color(0xFF607D8B),
+                                disabledBackgroundColor = Color(0xFF37474F),
+                                contentColor = Color.White,
+                                disabledContentColor = Color.White.copy(alpha = 0.6f)
+                            ),
+                            modifier = Modifier.padding(end = 4.dp)
+                        ) {
+                            Text("↑")
+                        }
+
+                        Button(
+                            onClick = { moveItem(index, 1) },
+                            enabled = index < items.size - 1,
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color(0xFF607D8B),
+                                disabledBackgroundColor = Color(0xFF37474F),
+                                contentColor = Color.White,
+                                disabledContentColor = Color.White.copy(alpha = 0.6f)
+                            ),
+                            modifier = Modifier.padding(end = 12.dp)
+                        ) {
+                            Text("↓")
+                        }
+
                         Button(
                             onClick = {
                                 updateProperty(items - item)
