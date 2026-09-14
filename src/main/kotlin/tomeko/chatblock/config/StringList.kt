@@ -1,6 +1,6 @@
 package tomeko.chatblock.config
 
-//? if = 1.8.9 {
+//? if forge {
 /*import cc.polyfrost.oneconfig.config.elements.BasicOption
 import cc.polyfrost.oneconfig.gui.elements.BasicButton
 import cc.polyfrost.oneconfig.gui.elements.IFocusable

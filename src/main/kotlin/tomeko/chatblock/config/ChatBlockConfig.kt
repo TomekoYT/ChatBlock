@@ -1,6 +1,6 @@
 package tomeko.chatblock.config
 
-//? if = 1.8.9 {
+//? if forge {
 /*import cc.polyfrost.oneconfig.config.Config
 import cc.polyfrost.oneconfig.config.annotations.*
 import cc.polyfrost.oneconfig.config.core.ConfigUtils
@@ -14,7 +14,7 @@ import org.polyfrost.oneconfig.api.config.v1.annotations.*
 import tomeko.chatblock.utils.Constants
 
 object ChatBlockConfig : Config(
-    //? if = 1.8.9 {
+    //? if forge {
     /*Mod(
         Constants.MOD_NAME,
         ModType.UTIL_QOL,
@@ -29,23 +29,23 @@ object ChatBlockConfig : Config(
     //?}
 ) {
     fun register() {
-        //? if = 1.8.9 {
-        /*initialize()
-        *///?} else {
+        //? if forge {
+        //initialize()
+        //?} else {
         preload()
         clearPropertyLabels()
         //?}
     }
 
-    //? if = 1.8.9 {
-    /*@Exclude
-    *///?}
+    //? if forge {
+    //@Exclude
+    //?}
     const val CATEGORY_BLOCK_RECEIVING = "Block Receiving Custom Messages"
 
     @Switch(
-        //? if = 1.8.9 {
-        /*name
-            *///?} else {
+        //? if forge {
+        //name
+            //?} else {
             title
                 //?}
         = "Case-sensitive",
@@ -54,9 +54,9 @@ object ChatBlockConfig : Config(
     var blockReceivingCaseSensitive: Boolean = false
 
     @Switch(
-        //? if = 1.8.9 {
-        /*name
-            *///?} else {
+        //? if forge {
+        //name
+            //?} else {
             title
                 //?}
         = "Send message informing about a block",
@@ -64,38 +64,38 @@ object ChatBlockConfig : Config(
     )
     var blockReceivingInfoMessage: Boolean = false
 
-    //? if >= 1.21.11 {
+    //? if !forge {
     @StringList(category = CATEGORY_BLOCK_RECEIVING)
     var messagesToBlockReceivingStringList: String = ""
     //?}
 
-    //? if = 1.8.9 {
-    /*@CustomOption(id = "blockReceiving")
-    *///?}
+    //? if forge {
+    //@CustomOption(id = "blockReceiving")
+    //?}
     var messagesToBlockReceiving: Array<String> = emptyArray()
-    //? if >= 1.21.11 {
+    //? if !forge {
     get() = messagesToBlockReceivingStringList.split("\n").filter { it.isNotBlank() }.toTypedArray()
 //?}
 
 
-    //? if = 1.8.9 {
-    /*@Exclude
-    *///?}
+    //? if forge {
+    //@Exclude
+    //?}
     const val CATEGORY_BLOCK_SENDING = "Block Sending Custom Words"
 
     @Slider(
-        //? if = 1.8.9 {
-        /*name
-            *///?} else {
+        //? if forge {
+        //name
+            //?} else {
             title
                 //?}
         = "Similarity",
         min = 1f,
         max = 100f,
         step =
-            //? if = 1.8.9 {
-            /*1
-        *///?} else {
+            //? if forge {
+            //1
+        //?} else {
         1f
     //?}
         , category = CATEGORY_BLOCK_SENDING
@@ -103,9 +103,9 @@ object ChatBlockConfig : Config(
     var blockSendingSimilarity: Int = 100
 
     @Switch(
-        //? if = 1.8.9 {
-        /*name
-            *///?} else {
+        //? if forge {
+        //name
+            //?} else {
             title
                 //?}
         = "Send message informing about a block",
@@ -113,29 +113,29 @@ object ChatBlockConfig : Config(
     )
     var blockSendingInfoMessage: Boolean = true
 
-    //? if >= 1.21.11 {
+    //? if !forge {
     @StringList(category = CATEGORY_BLOCK_SENDING)
     var wordsToBlockSendingStringList: String = ""
     //?}
 
-    //? if = 1.8.9 {
-    /*@CustomOption(id = "blockSending")
-    *///?}
+    //? if forge {
+    //@CustomOption(id = "blockSending")
+    //?}
     var wordsToBlockSending: Array<String> = emptyArray()
-    //? if >= 1.21.11 {
+    //? if !forge {
     get() = wordsToBlockSendingStringList.split(" ").filter { it.isNotBlank() }.toTypedArray()
     //?}
 
 
-    //? if = 1.8.9 {
-    /*@Exclude
-    *///?}
+    //? if forge {
+    //@Exclude
+    //?}
     const val CATEGORY_DEBUG = "Debug"
 
     @Switch(
-        //? if = 1.8.9 {
-        /*name
-            *///?} else {
+        //? if forge {
+        //name
+            //?} else {
             title
                 //?}
         = "Debug Mode",
@@ -143,7 +143,7 @@ object ChatBlockConfig : Config(
     )
     var debugModeEnabled = false
 
-    //? if = 1.8.9 {
+    //? if forge {
     /*override fun getCustomOption(
         field: Field,
         annotation: CustomOption,

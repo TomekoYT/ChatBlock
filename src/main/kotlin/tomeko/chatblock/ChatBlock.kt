@@ -1,10 +1,12 @@
 package tomeko.chatblock
 
-//? if = 1.8.9 {
+//? if forge {
 /*import cc.polyfrost.oneconfig.events.EventManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-*///?} else {
+*///?} elif ornithe {
+//import net.ornithemc.osl.entrypoints.api.ModInitializer
+//?} else {
 import net.fabricmc.api.ClientModInitializer
 //?}
 import tomeko.chatblock.chat.*
@@ -12,7 +14,7 @@ import tomeko.chatblock.commands.*
 import tomeko.chatblock.config.*
 import tomeko.chatblock.utils.*
 
-//? if = 1.8.9 {
+//? if forge {
 /*@Mod(
     modid = Constants.MOD_ID,
     name = Constants.MOD_NAME,
@@ -21,28 +23,33 @@ import tomeko.chatblock.utils.*
 )
 *///?}
 class ChatBlock
-//? if >= 1.21.11 {
+//? if ornithe {
+    //: ModInitializer
+//?} elif fabric {
     : ClientModInitializer
 //?}
 {
-    //? if = 1.8.9 {
-    /*@Mod.EventHandler
-    *///?} else {
+    //? if forge {
+    //@Mod.EventHandler
+    //?} else {
     override
     //?}
-    fun onInitializeClient(
-        //? if = 1.8.9 {
-        /*event: FMLInitializationEvent
-        *///?}
+    fun
+            //? if ornithe {
+            //init(
+        //?} else {
+            onInitializeClient(
+        //?}
+        //? if forge {
+        //event: FMLInitializationEvent
+        //?}
     ) {
-        //? if = 1.8.9 {
-        /*EventManager.INSTANCE.register(this)
-        *///?}
+        //? if forge {
+        //EventManager.INSTANCE.register(this)
+        //?}
 
         BlockReceivingMessages.register()
-        //? if >= 1.21.11 {
         BlockSendingWords.register()
-        //?}
 
         ChatBlockCommand.register()
 

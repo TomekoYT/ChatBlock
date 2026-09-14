@@ -1,8 +1,9 @@
 package tomeko.chatblock.chat
 
-//? if = 1.8.9 {
+//? if 1.8.9 {
 /*import net.minecraft.client.Minecraft
 import net.minecraft.util.ChatComponentText
+import net.minecraft.util.ChatStyle
 import net.minecraft.util.EnumChatFormatting
 *///?} else {
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents
@@ -11,17 +12,21 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 //?}
 import tomeko.chatblock.config.ChatBlockConfig
+//? if 1.8.9 {
+//import tomeko.chatblock.event.ClientSendMessageEvents
+//?}
 import kotlin.math.round
 
 object BlockSendingWords {
-    //? if >= 1.21.11 {
     fun register() {
+        //? if 1.8.9 {
+        //ClientSendMessageEvents.ALLOW.register(::allowSending)
+        //?} else {
         ClientSendMessageEvents.ALLOW_CHAT.register(::allowSending)
         ClientSendMessageEvents.ALLOW_COMMAND.register(::allowSending)
+        //?}
     }
-    //?}
 
-    @JvmStatic
     fun allowSending(message: String): Boolean {
         if (message.isEmpty()) return true
 
@@ -34,17 +39,17 @@ object BlockSendingWords {
                 val similar = 100 * similarity(word, wordToBlock)
                 if (similar >= ChatBlockConfig.blockSendingSimilarity) {
                     if (ChatBlockConfig.blockSendingInfoMessage) {
-                        val info = "Blocked sending message: $message, matched: $word with $wordToBlock (${
-                            round(
-                                10 * similar
-                            ) / 10
-                        }% similarity)"
+                        val info =
+                            "Blocked sending message: $message, matched: $word with $wordToBlock (${round(10 * similar) / 10}% similarity)"
 
-                        //? if = 1.8.9 {
-                        /*Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("${EnumChatFormatting.RED}${info}"))
-                        *///?} else if = 1.21.11 {
-                        /*Minecraft.getInstance().gui.chat.addMessage(
-                            Component.literal(info).withStyle { it.withColor(ChatFormatting.RED) })
+                        //? if 1.8.9 {
+                        /*Minecraft.getMinecraft().thePlayer.addChatMessage(
+                            ChatComponentText(info).setChatStyle(
+                                ChatStyle().setColor(
+                                    EnumChatFormatting.RED
+                                )
+                            )
+                        )
                         *///?} else if >= 26.2 {
                         /*Minecraft.getInstance().gui.hud.chat.addClientSystemMessage(
                             Component.literal(info).withStyle { it.withColor(ChatFormatting.RED) })

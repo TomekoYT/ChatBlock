@@ -2,13 +2,13 @@ package tomeko.chatblock.utils
 
 import tomeko.chatblock.config.ChatBlockConfig
 
-//? if >= 1.21.11 {
+//? if !forge {
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 //?}
 
 object Debug {
-    //? if >= 1.21.11 {
+    //? if !forge {
     private val LOGGER: Logger = LoggerFactory.getLogger(Constants.MOD_ID)
     //?}
 
@@ -19,9 +19,9 @@ object Debug {
     }
 
     fun forceLog(message: String) {
-        //? if = 1.8.9 {
-        /*kotlin.io.println("[${Constants.MOD_NAME}] $message")
-        *///?} else {
+        //? if forge {
+        //kotlin.io.println("[${Constants.MOD_NAME}] $message")
+        //?} else {
         LOGGER.info("[${Constants.MOD_NAME}] $message")
         //?}
     }
