@@ -62,12 +62,12 @@ object BlockReceivingMessages {
                         )
                     )
                     *///?} else if >= 26.2 {
-                    /*Minecraft.getInstance().gui.hud.chat.addClientSystemMessage(
+                    Minecraft.getInstance().gui.hud.chat.addClientSystemMessage(
                         Component.literal(info).withStyle { it.withColor(ChatFormatting.RED) })
-                    *///?} else {
-                    Minecraft.getInstance().gui.chat.addClientSystemMessage(
+                    //?} else {
+                    /*Minecraft.getInstance().gui.chat.addClientSystemMessage(
                         Component.literal(info).withStyle { it.withColor(ChatFormatting.RED) })
-                    //?}
+                    *///?}
                 }
                 return false
             }

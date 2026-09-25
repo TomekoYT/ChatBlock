@@ -19,12 +19,8 @@ import kotlin.math.round
 
 object BlockSendingWords {
     fun register() {
-        //? if 1.8.9 {
-        //ClientSendMessageEvents.ALLOW.register(::allowSending)
-        //?} else {
         ClientSendMessageEvents.ALLOW_CHAT.register(::allowSending)
         ClientSendMessageEvents.ALLOW_COMMAND.register(::allowSending)
-        //?}
     }
 
     fun allowSending(message: String): Boolean {
@@ -51,12 +47,12 @@ object BlockSendingWords {
                             )
                         )
                         *///?} else if >= 26.2 {
-                        /*Minecraft.getInstance().gui.hud.chat.addClientSystemMessage(
+                        Minecraft.getInstance().gui.hud.chat.addClientSystemMessage(
                             Component.literal(info).withStyle { it.withColor(ChatFormatting.RED) })
-                        *///?} else {
-                        Minecraft.getInstance().gui.chat.addClientSystemMessage(
+                        //?} else {
+                        /*Minecraft.getInstance().gui.chat.addClientSystemMessage(
                             Component.literal(info).withStyle { it.withColor(ChatFormatting.RED) })
-                        //?}
+                        *///?}
                     }
                     return false
                 }

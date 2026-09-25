@@ -55,6 +55,6 @@ class ChatBlock
 
         ChatBlockConfig.register()
 
-        Debug.forceLog("Initialized!")
+        Debug.forceLog("${Constants.MOD_VERSION} Initialized!")
     }
 }
