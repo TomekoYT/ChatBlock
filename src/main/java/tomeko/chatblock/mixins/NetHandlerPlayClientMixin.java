@@ -25,7 +25,7 @@ public abstract class NetHandlerPlayClientMixin {
     private void chatblock$onHandleChat(S02PacketChat packet, CallbackInfo ci) {
         boolean overlay = packet.getType() == 2;
 
-        IChatComponent message = hychatter$process(packet.getChatComponent(), overlay);
+        IChatComponent message = chatblock$process(packet.getChatComponent(), overlay);
 
         ci.cancel();
 
@@ -41,7 +41,7 @@ public abstract class NetHandlerPlayClientMixin {
         }
     }
 
-    private static IChatComponent hychatter$process(IChatComponent message, boolean overlay) {
+    private static IChatComponent chatblock$process(IChatComponent message, boolean overlay) {
         boolean allowed = ClientReceiveMessageEvents.ALLOW_GAME.invoker().allowReceiveGameMessage(message, overlay);
         if (!overlay) {
             allowed &= ClientReceiveMessageEvents.ALLOW_CHAT.invoker().allowReceiveChatMessage(message);
