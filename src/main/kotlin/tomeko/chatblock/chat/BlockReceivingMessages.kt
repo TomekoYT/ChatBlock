@@ -24,7 +24,7 @@ object BlockReceivingMessages {
     }
 
     private fun allowReceiving(component: Component?, fromActionBar: Boolean): Boolean {
-        if (fromActionBar || component == null) return false
+        if (fromActionBar || component == null) return true
 
         val message =
             //? if 1.8.9 {
@@ -46,7 +46,7 @@ object BlockReceivingMessages {
                 ).matches(message)
             } catch (_: Exception) {
                 Debug.log("Invalid regex: $messageToBlock")
-                false
+                true
             }
 
             if (matches) {
