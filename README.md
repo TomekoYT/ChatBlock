@@ -12,7 +12,7 @@
 
 # Chat Block
 
-Multiversion mod that adds a filter list to block/hide sending and receiving custom spam chat messages
+Adds a filter list to block/hide sending and receiving custom spam chat messages
 
 ## Features
 
