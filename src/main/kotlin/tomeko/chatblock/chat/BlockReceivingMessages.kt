@@ -40,9 +40,9 @@ object BlockReceivingMessages {
                 Regex(
                     messageToBlock,
                     if (ChatBlockConfig.blockReceivingCaseSensitive)
-                        emptySet()
+                        setOf(RegexOption.DOT_MATCHES_ALL)
                     else
-                        setOf(RegexOption.IGNORE_CASE)
+                        setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE)
                 ).matches(message)
             } catch (_: Exception) {
                 Debug.log("Invalid regex: $messageToBlock")
