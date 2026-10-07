@@ -11,6 +11,7 @@ val baseGroup = project.property("base_group") as String
 val javaVersion = project.property("java_version") as String
 val minecraftVersion = project.property("minecraft_version") as String
 
+val mixinbooterVersion = project.property("mixinbooter_version") as String
 val oneconfigVersion = project.property("oneconfig_version") as String
 
 plugins {
@@ -31,7 +32,7 @@ loom {
     runs {
         getByName("client") {
             property("mixin.debug", "true")
-            programArgs("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
+            property("fml.coreMods.load", "zone.rong.mixinbooter.MixinBooterPlugin")
             programArgs("--tweakClass", "cc.polyfrost.oneconfig.loader.stage0.LaunchWrapperTweaker")
         }
     }
@@ -66,7 +67,7 @@ sourceSets.main {
 
 repositories {
     mavenCentral()
-    maven("https://repo.spongepowered.org/maven/")
+    maven("https://maven.cleanroommc.com")
     maven("https://repo.polyfrost.cc/releases")
 }
 
@@ -86,10 +87,10 @@ dependencies {
     annotationProcessor("com.google.guava:guava:32.1.2-jre")
     annotationProcessor("com.google.code.gson:gson:2.8.9")
 
-    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT")
-    shadowImpl("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+    implementation("zone.rong:mixinbooter:$mixinbooterVersion") {
         isTransitive = false
     }
+    annotationProcessor("zone.rong:mixinbooter:$mixinbooterVersion")
 
     compileOnly("cc.polyfrost:oneconfig-$minecraftVersion-forge:$oneconfigVersion")
     shadowImpl("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-beta+")
@@ -113,8 +114,8 @@ tasks.withType(org.gradle.jvm.tasks.Jar::class) {
         this["FMLCorePluginContainsFMLMod"] = "true"
         this["ForceLoadAsMod"] = "true"
 
-        this["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
         this["MixinConfigs"] = "mixins.$modId.json"
+        this["MixinConnector"] = "$baseGroup.MixinConnector"
     }
 }
 

@@ -19,7 +19,8 @@ import tomeko.chatblock.utils.*
     modid = Constants.MOD_ID,
     name = Constants.MOD_NAME,
     version = Constants.MOD_VERSION,
-    modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter"
+    modLanguageAdapter = "cc.polyfrost.oneconfig.utils.KotlinLanguageAdapter",
+    dependencies = "required-after:mixinbooter"
 )
 *///?}
 class ChatBlock

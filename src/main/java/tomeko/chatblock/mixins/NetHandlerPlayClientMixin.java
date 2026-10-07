@@ -1,44 +1,21 @@
 package tomeko.chatblock.mixins;
 
 //? if 1.8.9 {
-/*import net.minecraft.client.Minecraft;
+/*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.IChatComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tomeko.chatblock.event.ClientReceiveMessageEvents;
 
 @Mixin(NetHandlerPlayClient.class)
-public abstract class NetHandlerPlayClientMixin {
-    @Inject(
-            method = "handleChat",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/network/PacketThreadUtil;checkThreadAndEnqueue(Lnet/minecraft/network/Packet;Lnet/minecraft/network/INetHandler;Lnet/minecraft/util/IThreadListener;)V",
-                    shift = At.Shift.AFTER
-            ),
-            cancellable = true
-    )
-    private void chatblock$onHandleChat(S02PacketChat packet, CallbackInfo ci) {
-        boolean overlay = packet.getType() == 2;
-
-        IChatComponent message = chatblock$process(packet.getChatComponent(), overlay);
-
-        ci.cancel();
-
-        if (message == null) {
-            return;
-        }
-
-        Minecraft mc = Minecraft.getMinecraft();
-        if (overlay) {
-            mc.ingameGUI.setRecordPlaying(message, false);
-        } else {
-            mc.ingameGUI.getChatGUI().printChatMessage(message);
-        }
+abstract class NetHandlerPlayClientMixin {
+    @WrapOperation(method = "handleChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiNewChat;printChatMessage(Lnet/minecraft/util/IChatComponent;)V"))
+    private void chatblock$onChat(GuiNewChat chat, IChatComponent message, Operation<Void> original) {
+        message = chatblock$process(message, false);
+        if (message != null) original.call(chat, message);
     }
 
     private static IChatComponent chatblock$process(IChatComponent message, boolean overlay) {
