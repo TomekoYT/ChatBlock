@@ -426,10 +426,9 @@ class StringListVisualizer : Visualizer {
                     if (editingIndex == index) {
                         Button(
                             onClick = {
-                                val trimmed = editingText.trim()
-                                if (trimmed.isNotBlank()) {
+                                if (editingText.isNotBlank()) {
                                     val newList = items.toMutableList()
-                                    newList[index] = trimmed
+                                    newList[index] = editingText
                                     updateProperty(newList)
                                 }
                                 editingIndex = null
@@ -527,7 +526,7 @@ class StringListVisualizer : Visualizer {
                 Button(
                     onClick = {
                         if (newItemText.isNotBlank() && !items.contains(newItemText)) {
-                            updateProperty(items + newItemText.trim())
+                            updateProperty(items + newItemText)
                             newItemText = ""
                         }
                     },
